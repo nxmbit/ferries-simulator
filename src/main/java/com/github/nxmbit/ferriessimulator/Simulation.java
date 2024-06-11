@@ -19,11 +19,6 @@ public class Simulation implements Runnable {
     private Map<Integer, Tile> despawnPoints;
     private Map<Integer, Dock> docks;
 
-    private double canvasWidth;
-    private double canvasHeight;
-    private double roadWidth;
-    private double dockWidth;
-    private double dockHeight;
 
     public Simulation() {
         this.ferries = new ArrayList<>();
@@ -64,12 +59,6 @@ public class Simulation implements Runnable {
     }
 
     public void setup(int ferryCount, int capacity, double canvasWidth, double canvasHeight, double roadWidth, double dockWidth, double dockHeight, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.roadWidth = roadWidth;
-        this.dockWidth = dockWidth;
-        this.dockHeight = dockHeight;
-
         setSpawnAndDespawnPoints(grid);
 
         leftDock = new Dock(capacity);
@@ -83,7 +72,7 @@ public class Simulation implements Runnable {
             new Thread(ferry).start();
         }
 
-        vehicleSpawner = new VehicleSpawner(docks, roadWidth, canvasHeight, grid, maxCarsCount, spawnPoints, despawnPoints, originalTileTypes, 5000);
+        vehicleSpawner = new VehicleSpawner(docks, grid, maxCarsCount, spawnPoints, despawnPoints, originalTileTypes, 5000, vehicles);
     }
 
     public List<Ferry> getFerries() {
@@ -126,6 +115,7 @@ public class Simulation implements Runnable {
     public static void removeVehicle(Vehicle vehicle) {
         synchronized (vehicles) {
             vehicles.remove(vehicle);
+            System.out.println("Vehicle removed. Current vehicle count: " + vehicles.size());
         }
     }
 }

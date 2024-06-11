@@ -8,8 +8,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class VehicleSpawner {
-    private double roadWidth;
-    private double canvasHeight;
     private Tile[][] grid;
     private TileType[][] originalTileTypes;
     private ScheduledExecutorService executorService;
@@ -24,15 +22,13 @@ public class VehicleSpawner {
     private final double maxSpeed = 8.0; // Maksymalna prędkość pojazdu
     private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.PURPLE}; // Jaskrawe kolory
 
-    public VehicleSpawner(Map<Integer, Dock> docks, double roadWidth, double canvasHeight, Tile[][] grid, int maxCars, Map<Integer, Tile> spawnPoints, Map<Integer, Tile> despawnPoints, TileType[][] originalTileTypes, long spawnInterval) {
+    public VehicleSpawner(Map<Integer, Dock> docks, Tile[][] grid, int maxCars, Map<Integer, Tile> spawnPoints, Map<Integer, Tile> despawnPoints, TileType[][] originalTileTypes, long spawnInterval, List<Vehicle> vehicles) {
         this.docks = docks;
-        this.roadWidth = roadWidth;
-        this.canvasHeight = canvasHeight;
         this.grid = grid;
         this.originalTileTypes = originalTileTypes;
         this.maxCars = maxCars;
         this.spawnInterval = spawnInterval;
-        this.vehicles = Collections.synchronizedList(new ArrayList<>());
+        this.vehicles = vehicles;
         this.spawnPoints = spawnPoints;
         this.despawnPoints = despawnPoints;
         this.executorService = Executors.newScheduledThreadPool(1);  // Use single-threaded executor for spawning
@@ -44,6 +40,7 @@ public class VehicleSpawner {
 
     public void trySpawnVehicle() {
         synchronized (vehicles) {
+            System.out.println("Trying to spawn vehicle. Current vehicle count: " + vehicles.size() + ", Max cars: " + maxCars);
             if (vehicles.size() < maxCars) {
                 int spawnPointId = random.nextInt(2) + 1; // randomly select dock 1 or dock 2
                 attemptSpawnVehicle(spawnPointId);
@@ -114,7 +111,7 @@ public class VehicleSpawner {
 
     private void restartSpawning() {
         stopSpawning();
-        executorService = Executors.newScheduledThreadPool(4);  // Use single-threaded executor for spawning
+        executorService = Executors.newScheduledThreadPool(4);
         startSpawning();
     }
 
