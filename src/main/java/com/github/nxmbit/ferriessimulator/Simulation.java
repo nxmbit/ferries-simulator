@@ -63,7 +63,7 @@ public class Simulation implements Runnable {
         docks.put(2, rightDock);
     }
 
-    public void setup(int ferryCount, int capacity, double canvasWidth, double canvasHeight, double roadWidth, double dockWidth, double dockHeight, int maxLoadingTime, Tile[][] grid) {
+    public void setup(int ferryCount, int capacity, double canvasWidth, double canvasHeight, double roadWidth, double dockWidth, double dockHeight, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.roadWidth = roadWidth;
@@ -83,7 +83,7 @@ public class Simulation implements Runnable {
             new Thread(ferry).start();
         }
 
-        vehicleSpawner = new VehicleSpawner(docks, roadWidth, canvasHeight, grid, maxCarsCount, spawnPoints, despawnPoints, 5000);
+        vehicleSpawner = new VehicleSpawner(docks, roadWidth, canvasHeight, grid, maxCarsCount, spawnPoints, despawnPoints, originalTileTypes, 5000);
     }
 
     public List<Ferry> getFerries() {
@@ -120,6 +120,12 @@ public class Simulation implements Runnable {
     public void update() {
         for (Ferry ferry : ferries) {
             ferry.move();
+        }
+    }
+
+    public static void removeVehicle(Vehicle vehicle) {
+        synchronized (vehicles) {
+            vehicles.remove(vehicle);
         }
     }
 }

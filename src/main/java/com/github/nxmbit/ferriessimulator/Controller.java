@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.fxml.Initializable;
 
@@ -36,6 +38,7 @@ public class Controller implements Initializable {
     private ToggleButton toggleGridButton;
 
     private Tile[][] grid;
+    private TileType[][] OriginalTileTypes;
 
     private final int gridWidth = 128;
     private final int gridHeight = 64;
@@ -52,12 +55,13 @@ public class Controller implements Initializable {
 
     public void setupSimulation() {
         simulation = new Simulation();
-        simulation.setup(2, 10, pane.getWidth(), pane.getHeight(), 100, 100, 50, 5, grid);
-        timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> draw()));
+        simulation.setup(2, 10, pane.getWidth(), pane.getHeight(), 100, 100, 50, 5, grid, OriginalTileTypes);
+        timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> draw()));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
         pane.widthProperty().addListener((obs, oldVal, newVal) -> resizeGrid());
         pane.heightProperty().addListener((obs, oldVal, newVal) -> resizeGrid());
+
     }
 
     public void startSimulation() {
@@ -141,6 +145,7 @@ public class Controller implements Initializable {
         MapImport gridGenerator = new MapImport();
         double tileSize = Math.max(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
         grid = gridGenerator.generate(gridWidth, gridHeight, tileSize);
+        OriginalTileTypes = gridGenerator.getOriginalTileTypes();
     }
 
     private void resizeGrid() {

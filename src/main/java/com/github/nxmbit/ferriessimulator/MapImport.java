@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MapImport {
+    private TileType[][] originalTileTypes;
+
     private TileType convertToTileType(String tileSymbol) {
         switch (tileSymbol) {
             case "W":
@@ -68,6 +70,7 @@ public class MapImport {
 
     public Tile[][] generate(int gridWidth, int gridHeight, double tileSize) {
         Tile[][] grid = new Tile[gridWidth][gridHeight];
+        originalTileTypes = new TileType[gridWidth][gridHeight];
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/map.csv")))) {
             String line;
@@ -78,6 +81,7 @@ public class MapImport {
                     TileType type = convertToTileType(tileSymbols[j]);
                     Tile tile = new Tile(j * tileSize, i * tileSize, tileSize, tileSize, type, j, i);
                     grid[j][i] = tile;
+                    originalTileTypes[j][i] = type; // Store the original type
                 }
                 i++;
             }
@@ -88,5 +92,9 @@ public class MapImport {
         }
 
         return grid;
+    }
+
+    public TileType[][] getOriginalTileTypes() {
+        return originalTileTypes;
     }
 }

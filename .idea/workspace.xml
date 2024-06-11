@@ -4,36 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Dock.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/ImageLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/SettingsHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Tile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/TileType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleSpawner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/strings_en.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/strings_pl.properties" afterDir="false" />
+    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Initial commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleSpawner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleSpawner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,22 +50,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources/com/github/nxmbit/ferriessimulator",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources/com/github/nxmbit/ferriessimulator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator" />
@@ -150,8 +130,18 @@
       <workItem from="1718097017983" duration="2331000" />
       <workItem from="1718099706351" duration="504000" />
       <workItem from="1718100230155" duration="13000" />
-      <workItem from="1718100312288" duration="11648000" />
+      <workItem from="1718100312288" duration="12006000" />
+      <workItem from="1718116817566" duration="21982000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1718116581339</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718116581339</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,5 +157,21 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java</url>
+          <line>39</line>
+          <properties field="grid" class="com.github.nxmbit.ferriessimulator.Controller" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
