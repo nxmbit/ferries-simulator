@@ -46,7 +46,7 @@ public class Ferry implements Runnable {
     public void move() {
         if (state == FerryState.TRAVELING && isAtDock(targetDock)) {
             state = FerryState.LOADING;
-            loadVehicles();
+            //loadVehicles();
         } else if (state == FerryState.LOADING && vehicles.size() == capacity) {
             state = FerryState.TRAVELING;
             Dock temp = currentDock;
@@ -59,14 +59,14 @@ public class Ferry implements Runnable {
         }
     }
 
-    public void loadVehicles() {
-        // Synchronize on the vehicles list to prevent multiple threads from modifying it at the same time
-        synchronized (vehicles) {
-            while (vehicles.size() < capacity && currentDock.hasVehicles()) {
-                vehicles.add(currentDock.exit());
-            }
-        }
-    }
+//    public void loadVehicles() {
+//        // Synchronize on the vehicles list to prevent multiple threads from modifying it at the same time
+//        synchronized (vehicles) {
+//            while (vehicles.size() < capacity && currentDock.hasVehicles()) {
+//                vehicles.add(currentDock.exit());
+//            }
+//        }
+//    }
 
     public boolean isAtDock(Dock dock) {
 //        // Sprawdź, czy prom jest przy określonym doku

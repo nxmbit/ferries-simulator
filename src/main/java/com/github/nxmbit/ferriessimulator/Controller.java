@@ -40,8 +40,8 @@ public class Controller implements Initializable {
     private Tile[][] grid;
     private TileType[][] OriginalTileTypes;
 
-    private final int gridWidth = 128;
-    private final int gridHeight = 64;
+    private int gridWidth;
+    private int gridHeight;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -143,6 +143,8 @@ public class Controller implements Initializable {
 
     private void createGrid() {
         MapImport gridGenerator = new MapImport();
+        gridWidth = gridGenerator.getGridWidth();
+        gridHeight = gridGenerator.getGridHeight();
         double tileSize = Math.max(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
         grid = gridGenerator.generate(gridWidth, gridHeight, tileSize);
         OriginalTileTypes = gridGenerator.getOriginalTileTypes();

@@ -127,10 +127,10 @@ public class Tile extends Rectangle {
                 setFill(ImageLoader.getDockEdgeCrossLeftImagePattern());
                 break;
             case DOCK_CRITICAL_SECTION:
-                setFill(Color.PURPLE);
+                setFill(Color.BLACK);
                 break;
             case DOCK_QUEUE:
-                setFill(Color.ORANGE);
+                setFill(Color.DIMGRAY);
                 break;
             case GRASS:
                 setFill(Color.GREEN);

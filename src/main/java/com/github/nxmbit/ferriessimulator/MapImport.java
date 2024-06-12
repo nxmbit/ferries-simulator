@@ -2,10 +2,41 @@ package com.github.nxmbit.ferriessimulator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class MapImport {
     private TileType[][] originalTileTypes;
+
+    private int gridWidth;
+    private int gridHeight;
+    private int dock1EnteringCapacity;
+    private int dock1ExitingCapacity;
+    private int dock2EnteringCapacity;
+    private int dock2ExitingCapacity;
+
+    public MapImport() {
+        try (InputStream is = getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/map_properties.json")) {
+            JSONObject obj = new JSONObject(new JSONTokener(is));
+
+            JSONObject grid = obj.getJSONObject("grid");
+            this.gridWidth = grid.getInt("width");
+            this.gridHeight = grid.getInt("height");
+
+            JSONObject docks = obj.getJSONObject("docks");
+            JSONObject dock1 = docks.getJSONObject("dock1");
+            this.dock1EnteringCapacity = dock1.getInt("enteringVehicles");
+            this.dock1ExitingCapacity = dock1.getInt("exitingVehicles");
+
+            JSONObject dock2 = docks.getJSONObject("dock2");
+            this.dock2EnteringCapacity = dock2.getInt("enteringVehicles");
+            this.dock2ExitingCapacity = dock2.getInt("exitingVehicles");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private TileType convertToTileType(String tileSymbol) {
         switch (tileSymbol) {
@@ -96,5 +127,29 @@ public class MapImport {
 
     public TileType[][] getOriginalTileTypes() {
         return originalTileTypes;
+    }
+
+    public int getGridWidth() {
+        return gridWidth;
+    }
+
+    public int getGridHeight() {
+        return gridHeight;
+    }
+
+    public int getDock1EnteringCapacity() {
+        return dock1EnteringCapacity;
+    }
+
+    public int getDock1ExitingCapacity() {
+        return dock1ExitingCapacity;
+    }
+
+    public int getDock2EnteringCapacity() {
+        return dock2EnteringCapacity;
+    }
+
+    public int getDock2ExitingCapacity() {
+        return dock2ExitingCapacity;
     }
 }

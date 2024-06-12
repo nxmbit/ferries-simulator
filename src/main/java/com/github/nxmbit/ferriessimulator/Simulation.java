@@ -12,6 +12,8 @@ public class Simulation implements Runnable {
     private VehicleSpawner vehicleSpawner;
     private int maxCarsCount;
 
+    private MapImport mapImport;
+
     private Dock leftDock;
     private Dock rightDock;
 
@@ -26,6 +28,7 @@ public class Simulation implements Runnable {
         this.despawnPoints = new HashMap<>();
         this.docks = new HashMap<>();
         this.maxCarsCount = 5;
+        this.mapImport = new MapImport();
     }
 
     private void setSpawnAndDespawnPoints(Tile[][] grid) {
@@ -53,17 +56,13 @@ public class Simulation implements Runnable {
         return despawnPoints;
     }
 
-    private void setDocks() {
-        docks.put(1, leftDock);
-        docks.put(2, rightDock);
-    }
-
     public void setup(int ferryCount, int capacity, double canvasWidth, double canvasHeight, double roadWidth, double dockWidth, double dockHeight, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
         setSpawnAndDespawnPoints(grid);
 
-        leftDock = new Dock(capacity);
-        rightDock = new Dock(capacity);
-        setDocks();
+        leftDock = new Dock(mapImport.getDock1EnteringCapacity(), mapImport.getDock1ExitingCapacity());
+        rightDock = new Dock(mapImport.getDock2EnteringCapacity(), mapImport.getDock2ExitingCapacity());
+        docks.put(1, leftDock);
+        docks.put(2, rightDock);
 
         ferries.clear();
         for (int i = 0; i < ferryCount; i++) {
@@ -91,7 +90,7 @@ public class Simulation implements Runnable {
     public void run() {
         vehicleSpawner.startSpawning();
         while (true) {
-            update();
+            //update();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

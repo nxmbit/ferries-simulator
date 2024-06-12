@@ -1,0 +1,16 @@
+{
+  "grid": {
+    "width": 128,
+    "height": 64
+  },
+  "docks": {
+    "dock1": {
+      "enteringVehicles": 4,
+      "exitingVehicles": 6
+    },
+    "dock2": {
+      "enteringVehicles": 6,
+      "exitingVehicles": 4
+    }
+  }
+}
