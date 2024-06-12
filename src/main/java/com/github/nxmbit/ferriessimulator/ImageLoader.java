@@ -17,6 +17,8 @@ public class ImageLoader {
     private static ImagePattern dockEdgeTopImagePattern;
     private static ImagePattern dockEdgeLeftImagePattern;
     private static ImagePattern dockEdgeRightImagePattern;
+    private static ImagePattern dockEdgeBottomConnLeftImagePattern;
+    private static ImagePattern dockEdgeBottomConnRightImagePattern;
 
     static {
         roadEdgeRightImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/ROAD_EDGE_RIGHT.png")));
@@ -32,6 +34,8 @@ public class ImageLoader {
         dockEdgeTopImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/DOCK_EDGE_TOP.png")));
         dockEdgeLeftImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/DOCK_EDGE_LEFT.png")));
         dockEdgeRightImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/DOCK_EDGE_RIGHT.png")));
+        dockEdgeBottomConnLeftImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/DOCK_EDGE_BOTTOM_CONN_LEFT.png")));
+        dockEdgeBottomConnRightImagePattern = new ImagePattern(new Image(ImageLoader.class.getResourceAsStream("/com/github/nxmbit/ferriessimulator/images/DOCK_EDGE_BOTTOM_CONN_RIGHT.png")));
     }
 
     public static ImagePattern getRoadEdgeRightImagePattern() {
@@ -84,5 +88,13 @@ public class ImageLoader {
 
     public static ImagePattern getDockEdgeRightImagePattern() {
         return dockEdgeRightImagePattern;
+    }
+
+    public static ImagePattern getDockEdgeBottomConnLeftImagePattern() {
+        return dockEdgeBottomConnLeftImagePattern;
+    }
+
+    public static ImagePattern getDockEdgeBottomConnRightImagePattern() {
+        return dockEdgeBottomConnRightImagePattern;
     }
 }

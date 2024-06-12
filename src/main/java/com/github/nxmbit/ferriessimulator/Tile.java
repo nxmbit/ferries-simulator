@@ -126,6 +126,12 @@ public class Tile extends Rectangle {
             case DOCK_EDGE_CROSS_LEFT:
                 setFill(ImageLoader.getDockEdgeCrossLeftImagePattern());
                 break;
+            case DOCK_EDGE_BOTTOM_CONN_RIGHT:
+                setFill(ImageLoader.getDockEdgeBottomConnRightImagePattern());
+                break;
+            case DOCK_EDGE_BOTTOM_CONN_LEFT:
+                setFill(ImageLoader.getDockEdgeBottomConnLeftImagePattern());
+                break;
             case DOCK_CRITICAL_SECTION:
                 setFill(Color.BLACK);
                 break;

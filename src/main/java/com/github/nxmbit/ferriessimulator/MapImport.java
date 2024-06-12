@@ -64,6 +64,10 @@ public class MapImport {
                 return TileType.DOCK_EDGE_CROSS_RIGHT;
             case "DECL":
                 return TileType.DOCK_EDGE_CROSS_LEFT;
+            case "DEBCR":
+                return TileType.DOCK_EDGE_BOTTOM_CONN_RIGHT;
+            case "DEBCL":
+                return TileType.DOCK_EDGE_BOTTOM_CONN_LEFT;
             case "DEL":
                 return TileType.DOCK_EDGE_LEFT;
             case "DER":
