@@ -1,51 +1,6 @@
-package com.github.nxmbit.ferriessimulator;//package com.github.nxmbit.ferriessimulator;
-//
-//import java.util.concurrent.Semaphore;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class Dock {
-//    private final Semaphore semaphore;
-//    private final List<Vehicle> vehicles;
-//
-//    public Dock(int capacity) {
-//        this.semaphore = new Semaphore(capacity);
-//        this.vehicles = new ArrayList<>();
-//    }
-//
-//    public boolean canEnter() {
-//        return semaphore.availablePermits() > 0;
-//    }
-//
-//    public void enter(Vehicle vehicle) {
-//        try {
-//            semaphore.acquire();
-//            vehicles.add(vehicle);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public Vehicle exit() {
-//        if (hasVehicles()) {
-//            semaphore.release();
-//            return vehicles.remove(0);
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    public boolean hasVehicles() {
-//        return !vehicles.isEmpty();
-//    }
-//
-//    public void reset() {
-//        semaphore.release(semaphore.availablePermits());
-//        vehicles.clear();
-//    }
-//}
+package com.github.nxmbit.ferriessimulator;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -54,15 +9,15 @@ public class Dock {
     private final Semaphore enteringSemaphore;
     private final Semaphore exitingSemaphore;
     private final Lock criticalSectionLock;
-    private final LinkedBlockingQueue<Vehicle> enteringQueue;
-    private final LinkedBlockingQueue<Vehicle> exitingQueue;
+    private final ConcurrentLinkedQueue<Vehicle> enteringQueue;
+    private final ConcurrentLinkedQueue<Vehicle> exitingQueue;
 
     public Dock(int enteringCapacity, int exitingCapacity) {
         this.enteringSemaphore = new Semaphore(enteringCapacity);
         this.exitingSemaphore = new Semaphore(exitingCapacity);
         this.criticalSectionLock = new ReentrantLock();
-        this.enteringQueue = new LinkedBlockingQueue<>();
-        this.exitingQueue = new LinkedBlockingQueue<>();
+        this.enteringQueue = new ConcurrentLinkedQueue<>();
+        this.exitingQueue = new ConcurrentLinkedQueue<>();
     }
 
     public boolean canEnter() {
@@ -91,12 +46,12 @@ public class Dock {
         }
     }
 
-    public Vehicle removeEnteringVehicle() {
+    public Vehicle dequeueEnteringVehicle() {
         enteringSemaphore.release();
         return enteringQueue.poll();
     }
 
-    public Vehicle removeExitingVehicle() {
+    public Vehicle dequeueExitingVehicle() {
         exitingSemaphore.release();
         return exitingQueue.poll();
     }

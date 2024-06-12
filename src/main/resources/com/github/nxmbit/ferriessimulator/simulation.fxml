@@ -29,6 +29,6 @@
             </VBox.margin>
         </VBox>
         <Separator orientation="VERTICAL"/>
-        <Pane fx:id="pane" minWidth="1280" minHeight="720" />
+        <Pane fx:id="pane" minWidth="1664" minHeight="936" />
     </children>
 </HBox>

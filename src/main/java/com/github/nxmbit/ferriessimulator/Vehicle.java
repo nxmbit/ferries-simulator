@@ -13,11 +13,11 @@ public class Vehicle implements Runnable {
     private int prevY;
     private Tile[][] grid;
     private TileType[][] originalTileTypes;
-    private boolean justSpawned;
     private boolean wasWaiting;
     private final Color color;
     private VehicleState state;
     private VehicleState previousState;
+    private VehicleState travelState;
 
     private boolean running;
 
@@ -36,9 +36,9 @@ public class Vehicle implements Runnable {
         this.originalTileTypes = originalTileTypes;
         grid[x][y].setType(TileType.VEHICLE);
         grid[x][y].setFill(color);
-        this.justSpawned = true;
         this.wasWaiting = false;
         this.state = VehicleState.GOING_STRAIGHT_UP;
+        this.travelState = VehicleState.TRAVELLING_TO_DOCK;
         this.running = true;
 
         //System.out.println("Vehicle spawned at (" + x + ", " + y + ") with speed " + speed + " and color " + color);
@@ -87,6 +87,33 @@ public class Vehicle implements Runnable {
                 return;
             }
 
+            if (travelState == VehicleState.TRAVELLING_TO_DOCK && isInFrontOfDockEntry()) {
+                if (!enterDockQueue()) {
+                    return; // If unable to enter dock queue, wait and retry
+                }
+            } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockTurnLeft()) {
+                // If the vehicle is in front of a left turn, and there is a vehicle left of it, wait
+                System.out.println("Vehicle is in front of a left turn");
+                if (grid[x - 1][y - 1].getType() == TileType.VEHICLE) {
+                    System.out.println("Vehicle is in front of a left turn and there is a vehicle left of it");
+                    return;
+                }
+            } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockTurnRight()) {
+                // If the vehicle is in front of a right turn, and there is a vehicle right of it, wait
+                if (grid[x + 1][y - 1].getType() == TileType.VEHICLE) {
+                    return;
+                }
+            } else if (travelState == VehicleState.UNLOADING_FROM_FERRY && isInFrontOfCriticalSection()) {
+                if (!exitDock()) {
+                    return; // If unable to exit dock, wait and retry
+                }
+            } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockQueue()) {
+                return; // for now just wait, later we will handle exiting if critical section is free
+            } else if (travelState == VehicleState.LOADED_ON_FERRY || travelState == VehicleState.UNLOADING_FROM_FERRY) {
+                // Ferry logic will handle these states
+                return;
+            }
+
             Tile nextTile = getNextTile();
             if (nextTile != null) {
                 if (nextTile.getType() == TileType.DOCK_TURN_LEFT || nextTile.getType() == TileType.DOCK_TURN_RIGHT || nextTile.getType() == TileType.DOCK_STRAIGHT_DOWN) {
@@ -121,12 +148,8 @@ public class Vehicle implements Runnable {
                 case GOING_STRAIGHT_DOWN:
                     moveStraight(1);
                     break;
-                case TRAVELLING_TO_DOCK:
-                case AWAITING_ON_DOCK:
-                case LOADED_ON_FERRY:
-                case UNLOADING_FROM_FERRY:
-                case TRAVELLING_FROM_DOCK:
-                    // Handle other states as needed
+                default:
+                    // tu jakis try catch ?
                     break;
             }
 
@@ -175,6 +198,51 @@ public class Vehicle implements Runnable {
         return x == despawnPoint.getGridX() && y == despawnPoint.getGridY();
     }
 
+    private boolean isInFrontOfDockEntry() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.DOCK;
+    }
+
+    private boolean isInFrontOfDockQueue() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.DOCK_QUEUE;
+    }
+
+    private boolean isInFrontOfCriticalSection() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.DOCK_CRITICAL_SECTION;
+    }
+
+    private boolean isInFrontOfDockTurnLeft() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.DOCK_TURN_LEFT;
+    }
+
+    private boolean isInFrontOfDockTurnRight() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.DOCK_TURN_RIGHT;
+    }
+
+    private boolean enterDockQueue() {
+        // Próbuj wejść do kolejki na dock
+        if (dock.canEnter()) {
+            dock.enter(this);
+            travelState = VehicleState.AWAITING_ON_DOCK;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean exitDock() { //to powinno sie odnosic do zjazdu z promu
+        // Próbuj wyjść z docku
+        if (dock.canExit()) {
+            dock.exit(this);
+            travelState = VehicleState.TRAVELLING_FROM_DOCK;
+            return true;
+        }
+        return false;
+    }
+
     private void moveStraight(int direction) {
         if ((direction == -1 && y - 1 >= 0) || (direction == 1 && y + 1 < grid[0].length)) {
             Tile nextTile = grid[x][y + direction];
@@ -188,7 +256,6 @@ public class Vehicle implements Runnable {
                     return;
                 } else if (nextNextTile != null && nextNextTile.getType() == TileType.VEHICLE) {
                     speed = getAdjustedSpeed(x, y + 2 * direction);
-                    wasWaiting = true;
                     return;
                 } else {
                     speed = maxSpeed;
@@ -216,7 +283,6 @@ public class Vehicle implements Runnable {
                     return;
                 } else if (nextNextTile != null && nextNextTile.getType() == TileType.VEHICLE) {
                     speed = getAdjustedSpeed(x + 2 * direction, y);
-                    wasWaiting = true;
                     return;
                 } else {
                     speed = maxSpeed;

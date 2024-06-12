@@ -1,17 +1,15 @@
 package com.github.nxmbit.ferriessimulator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Ferry implements Runnable {
     private double speed;
     private int capacity;
-    private double x;
-    private double y;
+    private double x, y;
     private Dock currentDock;
     private Dock targetDock;
     private FerryState state;
-    private List<Vehicle> vehicles = new ArrayList<>();
+    private ConcurrentLinkedQueue<Vehicle> vehicles;
 
     public Ferry(double speed, int capacity, double x, double y, Dock currentDock, Dock targetDock) {
         this.speed = speed;
@@ -21,17 +19,9 @@ public class Ferry implements Runnable {
         this.currentDock = currentDock;
         this.targetDock = targetDock;
         this.state = FerryState.LOADING;
+        this.vehicles = new ConcurrentLinkedQueue<>();
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    @Override
     public void run() {
         while (true) {
             move();
@@ -45,13 +35,11 @@ public class Ferry implements Runnable {
 
     public void move() {
         if (state == FerryState.TRAVELING && isAtDock(targetDock)) {
+            state = FerryState.UNLOADING;
+            unloadVehicles();
+        } else if (state == FerryState.UNLOADING && vehicles.isEmpty()) {
             state = FerryState.LOADING;
-            //loadVehicles();
-        } else if (state == FerryState.LOADING && vehicles.size() == capacity) {
-            state = FerryState.TRAVELING;
-            Dock temp = currentDock;
-            currentDock = targetDock;
-            targetDock = temp;
+            loadVehicles();
         }
 
         if (state == FerryState.TRAVELING) {
@@ -59,30 +47,31 @@ public class Ferry implements Runnable {
         }
     }
 
-//    public void loadVehicles() {
-//        // Synchronize on the vehicles list to prevent multiple threads from modifying it at the same time
-//        synchronized (vehicles) {
-//            while (vehicles.size() < capacity && currentDock.hasVehicles()) {
-//                vehicles.add(currentDock.exit());
-//            }
-//        }
-//    }
-
-    public boolean isAtDock(Dock dock) {
-//        // Sprawdź, czy prom jest przy określonym doku
-//        // Możesz dostosować te wartości, aby lepiej pasowały do twojej symulacji
-//        double dockStartX = dock.getX();
-//        double dockEndX = dock.getX() + dock.getWidth();
-//        double dockStartY = dock.getY();
-//        double dockEndY = dock.getY() + dock.getHeight();
-//
-//        return x >= dockStartX && x <= dockEndX && y >= dockStartY && y <= dockEndY;
-        return true;
+    public void loadVehicles() {
+        synchronized (currentDock.getCriticalSectionLock()) {
+            while (vehicles.size() < capacity && currentDock.hasQueuedEnteringVehicles()) {
+                vehicles.add(currentDock.dequeueEnteringVehicle());
+            }
+        }
     }
 
+    public void unloadVehicles() {
+        synchronized (targetDock.getCriticalSectionLock()) {
+            while (!vehicles.isEmpty()) {
+                Vehicle vehicle = vehicles.poll();
+                targetDock.exit(vehicle);
+            }
+        }
+    }
+
+    public boolean isAtDock(Dock dock) {
+        // Implement logic to check if the ferry is at the dock
+        return true;
+    }
 }
 
 enum FerryState {
     LOADING,
+    UNLOADING,
     TRAVELING
 }

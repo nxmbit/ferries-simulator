@@ -16,9 +16,9 @@ public class Main extends Application {
         Parent root = loader.load();
 
         primaryStage.setTitle("Symulacja Promów na Rzece");
-        //primaryStage.setScene(new Scene(root));
-        primaryStage.setScene(new Scene(root, 1920, 1080));
-        //primaryStage.setResizable(false); // Make the window non-resizable
+        primaryStage.setScene(new Scene(root));
+        //primaryStage.setScene(new Scene(root, 1920, 1080));
+        primaryStage.setResizable(false); // Make the window non-resizable
 
         primaryStage.setOnCloseRequest(e -> {
             Controller controller = loader.getController();

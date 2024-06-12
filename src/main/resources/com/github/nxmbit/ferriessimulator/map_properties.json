@@ -1,7 +1,8 @@
 {
   "grid": {
     "width": 128,
-    "height": 64
+    "height": 64,
+    "docks_height": 5
   },
   "docks": {
     "dock1": {
