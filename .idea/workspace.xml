@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Fixed connection between road and dock (visually)">
+    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Working dock entry semaphore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map_properties.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map_properties.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +41,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -49,22 +53,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources/com/github/nxmbit/ferriessimulator",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources/com/github/nxmbit/ferriessimulator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator" />
@@ -132,7 +136,8 @@
       <workItem from="1718100312288" duration="12006000" />
       <workItem from="1718116817566" duration="28295000" />
       <workItem from="1718198750717" duration="4268000" />
-      <workItem from="1718203025296" duration="9249000" />
+      <workItem from="1718203025296" duration="15646000" />
+      <workItem from="1718221211692" duration="48942000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -174,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718203470659</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Working dock entry semaphore">
+      <option name="closed" value="true" />
+      <created>1718212989946</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1718212989946</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,6 +210,7 @@
     <MESSAGE value="Working despawning and spawning back" />
     <MESSAGE value="Import map properties from json file" />
     <MESSAGE value="Fixed connection between road and dock (visually)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed connection between road and dock (visually)" />
+    <MESSAGE value="Working dock entry semaphore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working dock entry semaphore" />
   </component>
 </project>

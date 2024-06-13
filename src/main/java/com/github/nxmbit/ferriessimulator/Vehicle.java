@@ -18,6 +18,8 @@ public class Vehicle implements Runnable {
     private VehicleState state;
     private VehicleState previousState;
     private VehicleState travelState;
+    private long threadSleepBasedOnSpeed;
+    private boolean dockChanged;
 
     private boolean running;
 
@@ -40,6 +42,8 @@ public class Vehicle implements Runnable {
         this.state = VehicleState.GOING_STRAIGHT_UP;
         this.travelState = VehicleState.TRAVELLING_TO_DOCK;
         this.running = true;
+        this.threadSleepBasedOnSpeed = (long) (1000 / speed);
+        this.dockChanged = false;
 
         //System.out.println("Vehicle spawned at (" + x + ", " + y + ") with speed " + speed + " and color " + color);
     }
@@ -67,14 +71,14 @@ public class Vehicle implements Runnable {
         while (running) {
             try {
                 move();
-                Thread.sleep((long) (1000 / speed));
+                Thread.sleep(threadSleepBasedOnSpeed);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void move() {
+    public void move() throws InterruptedException {
         Lock currentLock = grid[x][y].getLock();
         currentLock.lock();
         try {
@@ -88,14 +92,12 @@ public class Vehicle implements Runnable {
             }
 
             if (travelState == VehicleState.TRAVELLING_TO_DOCK && isInFrontOfDockEntry()) {
-                if (!enterDockQueue()) {
+                if (!enterEnteringQueue()) {
                     return; // If unable to enter dock queue, wait and retry
                 }
             } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockTurnLeft()) {
                 // If the vehicle is in front of a left turn, and there is a vehicle left of it, wait
-                System.out.println("Vehicle is in front of a left turn");
                 if (grid[x - 1][y - 1].getType() == TileType.VEHICLE) {
-                    System.out.println("Vehicle is in front of a left turn and there is a vehicle left of it");
                     return;
                 }
             } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockTurnRight()) {
@@ -103,13 +105,14 @@ public class Vehicle implements Runnable {
                 if (grid[x + 1][y - 1].getType() == TileType.VEHICLE) {
                     return;
                 }
-            } else if (travelState == VehicleState.UNLOADING_FROM_FERRY && isInFrontOfCriticalSection()) {
-                if (!exitDock()) {
-                    return; // If unable to exit dock, wait and retry
-                }
+            } else if (travelState == VehicleState.UNLOADED_FROM_FERRY && isInFrontOfRoad()) {
+                exitExitingQueue();
+            } else if (travelState == VehicleState.UNLOADING_FROM_FERRY && isInCriticalSection()) {
+                enterExitingQueue();
             } else if (travelState == VehicleState.AWAITING_ON_DOCK && isInFrontOfDockQueue()) {
-                return; // for now just wait, later we will handle exiting if critical section is free
-            } else if (travelState == VehicleState.LOADED_ON_FERRY || travelState == VehicleState.UNLOADING_FROM_FERRY) {
+                exitEnteringQueue();
+                return; // If unable to exit dock queue, wait and retry
+            } else if (travelState == VehicleState.LOADED_ON_FERRY || travelState == VehicleState.LOADING_ON_FERRY) {
                 // Ferry logic will handle these states
                 return;
             }
@@ -223,24 +226,113 @@ public class Vehicle implements Runnable {
         return nextTile != null && nextTile.getType() == TileType.DOCK_TURN_RIGHT;
     }
 
-    private boolean enterDockQueue() {
+    private boolean isInFrontOfRoad() {
+        Tile nextTile = getNextTile();
+        return nextTile != null && nextTile.getType() == TileType.ROAD;
+    }
+
+    private boolean isInCriticalSection() {
+        return originalTileTypes[x][y] == TileType.DOCK_CRITICAL_SECTION;
+    }
+
+    private boolean enterEnteringQueue() {
         // Próbuj wejść do kolejki na dock
-        if (dock.canEnter()) {
-            dock.enter(this);
+        if (dock.canEnterEnteringQ()) {
+            dock.enterEnteringQ(this);
             travelState = VehicleState.AWAITING_ON_DOCK;
             return true;
         }
         return false;
     }
 
-    private boolean exitDock() { //to powinno sie odnosic do zjazdu z promu
-        // Próbuj wyjść z docku
-        if (dock.canExit()) {
-            dock.exit(this);
-            travelState = VehicleState.TRAVELLING_FROM_DOCK;
-            return true;
+    private boolean exitEnteringQueue() throws InterruptedException {
+        return enterCriticalSectionFromEnteringQueue();
+    }
+
+    private boolean enterExitingQueue() throws InterruptedException {
+        changeDock();
+        dock.getCriticalSectionLock().lock();
+        try {
+            if (dock.canEnterExitingQ()) {
+                x = dock.getCriticalSectionCoordinateX();
+                y = dock.getCriticalSectionCoordinateY();
+                grid[x][y].setType(TileType.VEHICLE);
+                grid[x][y].setFill(color);
+                Thread.sleep(threadSleepBasedOnSpeed);
+                dock.enterExitingQ(this);
+                dock.setCriticalSectionVehicle(null);
+                grid[x][y].setType(originalTileTypes[x][y]);
+                x = dock.getCriticalSectionReturnCoordinateX();
+                y = dock.getCriticalSectionReturnCoordinateY();
+                grid[x][y].setType(TileType.VEHICLE);
+                grid[x][y].setFill(color);
+                travelState = VehicleState.UNLOADED_FROM_FERRY;
+                return true;
+            }
+            return false;
+        } finally {
+            dock.getCriticalSectionLock().unlock();
         }
-        return false;
+    }
+
+    public void revertChangesToCriticalSectionWhenBoarding() {
+        grid[dock.getCriticalSectionCoordinateX()][dock.getCriticalSectionCoordinateY()].setType(TileType.DOCK_CRITICAL_SECTION);
+    }
+
+    private void exitExitingQueue() {
+        dock.exitExitingQ();
+    }
+
+    private void changeDock() {
+        if (dockChanged == false) {
+            if (dock == Simulation.getDocks().get(1)) {
+                dock = Simulation.getDocks().get(2);
+            } else {
+                dock = Simulation.getDocks().get(1);
+            }
+            dockChanged = true;
+        }
+    }
+
+    private boolean enterCriticalSectionFromEnteringQueue() throws InterruptedException {
+        dock.getCriticalSectionLock().lock();
+        try {
+            while (!dock.isFerryAtDock() || grid[dock.getCriticalSectionCoordinateX()][dock.getCriticalSectionCoordinateY()].getType() != TileType.DOCK_CRITICAL_SECTION) {
+                return false;
+            }
+            try {
+                System.out.println("Vehicle " + this + " waiting for critical section");
+                dock.getCriticalSectionCondition().await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+
+            // Przypisz pojazd do sekcji krytycznej
+            int criticalX = dock.getCriticalSectionCoordinateX();
+            int criticalY = dock.getCriticalSectionCoordinateY();
+            grid[x][y].setType(originalTileTypes[x][y]);
+            x = criticalX;
+            y = criticalY;
+            grid[x][y].setType(TileType.VEHICLE);
+            grid[x][y].setFill(color);
+            dock.exitEnteringQ();
+            dock.setCriticalSectionVehicle(this); // Zaktualizuj pojazd w sekcji krytycznej
+            travelState = VehicleState.LOADING_ON_FERRY;
+            Thread.sleep(threadSleepBasedOnSpeed);
+            //dock.signalVehicleToEnterCriticalSection(); // Powiadom kolejny pojazd o możliwości wejścia do sekcji krytycznej
+            return true;
+        } finally {
+            dock.getCriticalSectionLock().unlock();
+        }
+    }
+
+    public VehicleState getTravelState() {
+        return travelState;
+    }
+
+    public void setTravelState(VehicleState state) {
+        this.travelState = state;
     }
 
     private void moveStraight(int direction) {
@@ -316,6 +408,13 @@ public class Vehicle implements Runnable {
         }
     }
 
+    public Tile getTile() {
+        return grid[x][y];
+    }
+
+    public long unloadVehiclesWaittime() {
+        return threadSleepBasedOnSpeed;
+    }
 
     private double getAdjustedSpeed(int x, int y) {
         Vehicle vehicleAhead = getVehicleAhead(x, y);

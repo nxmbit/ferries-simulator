@@ -12,10 +12,23 @@ public class MapImport {
 
     private int gridWidth;
     private int gridHeight;
+    private int dockHeight;
     private int dock1EnteringCapacity;
     private int dock1ExitingCapacity;
+    private double dock1FerryCoordinateX;
+    private double dock1FerryCoordinateY;
     private int dock2EnteringCapacity;
     private int dock2ExitingCapacity;
+    private double dock2FerryCoordinateX;
+    private double dock2FerryCoordinateY;
+    private int dock1CriticalSectionCoordinateX;
+    private int dock1CriticalSectionCoordinateY;
+    private int dock2CriticalSectionCoordinateX;
+    private int dock2CriticalSectionCoordinateY;
+    private int dock1CriticalSectionReturnCoordinateX;
+    private int dock1CriticalSectionReturnCoordinateY;
+    private int dock2CriticalSectionReturnCoordinateX;
+    private int dock2CriticalSectionReturnCoordinateY;
 
     public MapImport() {
         try (InputStream is = getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/map_properties.json")) {
@@ -24,15 +37,28 @@ public class MapImport {
             JSONObject grid = obj.getJSONObject("grid");
             this.gridWidth = grid.getInt("width");
             this.gridHeight = grid.getInt("height");
+            this.dockHeight = grid.getInt("docks_height");
 
             JSONObject docks = obj.getJSONObject("docks");
             JSONObject dock1 = docks.getJSONObject("dock1");
             this.dock1EnteringCapacity = dock1.getInt("enteringVehicles");
             this.dock1ExitingCapacity = dock1.getInt("exitingVehicles");
+            this.dock1FerryCoordinateX = dock1.getJSONObject("ferryCoordinates").getDouble("x");
+            this.dock1FerryCoordinateY = dock1.getJSONObject("ferryCoordinates").getDouble("y");
+            this.dock1CriticalSectionCoordinateX = dock1.getJSONObject("criticalSectionCoordinates").getInt("x");
+            this.dock1CriticalSectionCoordinateY = dock1.getJSONObject("criticalSectionCoordinates").getInt("y");
+            this.dock1CriticalSectionReturnCoordinateX = dock1.getJSONObject("criticalSectionReturnCoordinates").getInt("x");
+            this.dock1CriticalSectionReturnCoordinateY = dock1.getJSONObject("criticalSectionReturnCoordinates").getInt("y");
 
             JSONObject dock2 = docks.getJSONObject("dock2");
             this.dock2EnteringCapacity = dock2.getInt("enteringVehicles");
             this.dock2ExitingCapacity = dock2.getInt("exitingVehicles");
+            this.dock2FerryCoordinateX = dock2.getJSONObject("ferryCoordinates").getDouble("x");
+            this.dock2FerryCoordinateY = dock2.getJSONObject("ferryCoordinates").getDouble("y");
+            this.dock2CriticalSectionCoordinateX = dock2.getJSONObject("criticalSectionCoordinates").getInt("x");
+            this.dock2CriticalSectionCoordinateY = dock2.getJSONObject("criticalSectionCoordinates").getInt("y");
+            this.dock2CriticalSectionReturnCoordinateX = dock2.getJSONObject("criticalSectionReturnCoordinates").getInt("x");
+            this.dock2CriticalSectionReturnCoordinateY = dock2.getJSONObject("criticalSectionReturnCoordinates").getInt("y");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,6 +167,10 @@ public class MapImport {
         return gridHeight;
     }
 
+    public int getDockHeight() {
+        return dockHeight;
+    }
+
     public int getDock1EnteringCapacity() {
         return dock1EnteringCapacity;
     }
@@ -149,11 +179,59 @@ public class MapImport {
         return dock1ExitingCapacity;
     }
 
+    public double getDock1FerryCoordinateX() {
+        return dock1FerryCoordinateX;
+    }
+
+    public double getDock1FerryCoordinateY() {
+        return dock1FerryCoordinateY;
+    }
+
     public int getDock2EnteringCapacity() {
         return dock2EnteringCapacity;
     }
 
     public int getDock2ExitingCapacity() {
         return dock2ExitingCapacity;
+    }
+
+    public double getDock2FerryCoordinateX() {
+        return dock2FerryCoordinateX;
+    }
+
+    public double getDock2FerryCoordinateY() {
+        return dock2FerryCoordinateY;
+    }
+
+    public int getDock1CriticalSectionCoordinateX() {
+        return dock1CriticalSectionCoordinateX;
+    }
+
+    public int getDock1CriticalSectionCoordinateY() {
+        return dock1CriticalSectionCoordinateY;
+    }
+
+    public int getDock2CriticalSectionCoordinateX() {
+        return dock2CriticalSectionCoordinateX;
+    }
+
+    public int getDock2CriticalSectionCoordinateY() {
+        return dock2CriticalSectionCoordinateY;
+    }
+
+    public int getDock1CriticalSectionReturnCoordinateX() {
+        return dock1CriticalSectionReturnCoordinateX;
+    }
+
+    public int getDock1CriticalSectionReturnCoordinateY() {
+        return dock1CriticalSectionReturnCoordinateY;
+    }
+
+    public int getDock2CriticalSectionReturnCoordinateX() {
+        return dock2CriticalSectionReturnCoordinateX;
+    }
+
+    public int getDock2CriticalSectionReturnCoordinateY() {
+        return dock2CriticalSectionReturnCoordinateY;
     }
 }

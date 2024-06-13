@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.HashMap;
 
 public class Simulation implements Runnable {
@@ -19,7 +20,7 @@ public class Simulation implements Runnable {
 
     private Map<Integer, Tile> spawnPoints;
     private Map<Integer, Tile> despawnPoints;
-    private Map<Integer, Dock> docks;
+    private static Map<Integer, Dock> docks;
 
 
     public Simulation() {
@@ -56,19 +57,27 @@ public class Simulation implements Runnable {
         return despawnPoints;
     }
 
-    public void setup(int ferryCount, int capacity, double canvasWidth, double canvasHeight, double roadWidth, double dockWidth, double dockHeight, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
+    public void setup(int ferryCount, int dockHeight, double tileSize, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
         setSpawnAndDespawnPoints(grid);
 
-        leftDock = new Dock(mapImport.getDock1EnteringCapacity(), mapImport.getDock1ExitingCapacity());
-        rightDock = new Dock(mapImport.getDock2EnteringCapacity(), mapImport.getDock2ExitingCapacity());
+        leftDock = new Dock(mapImport.getDock1EnteringCapacity(), mapImport.getDock1ExitingCapacity(),
+                mapImport.getDock1FerryCoordinateX(), mapImport.getDock1FerryCoordinateY(),
+                mapImport.getDock1CriticalSectionCoordinateX(), mapImport.getDock1CriticalSectionCoordinateY(),
+                mapImport.getDock1CriticalSectionReturnCoordinateX(), mapImport.getDock1CriticalSectionReturnCoordinateY());
+        rightDock = new Dock(mapImport.getDock2EnteringCapacity(), mapImport.getDock2ExitingCapacity(),
+                mapImport.getDock2FerryCoordinateX(), mapImport.getDock2FerryCoordinateY(),
+                mapImport.getDock2CriticalSectionCoordinateX(), mapImport.getDock2CriticalSectionCoordinateY(),
+                mapImport.getDock2CriticalSectionReturnCoordinateX(), mapImport.getDock2CriticalSectionReturnCoordinateY());
         docks.put(1, leftDock);
         docks.put(2, rightDock);
 
+        System.out.println("koordynaty docku: " + leftDock.getFerryCoordinateX() + " " + leftDock.getFerryCoordinateY() + " " + tileSize);
+
         ferries.clear();
         for (int i = 0; i < ferryCount; i++) {
-            Ferry ferry = new Ferry(1.0, capacity, canvasWidth / (ferryCount + 1) * (i + 1), canvasHeight / 2, leftDock, rightDock);  // Example starting positions
+            int capacity = 2 + new Random().nextInt(5) * 2; // Random capacity between 2 and 10
+            Ferry ferry = new Ferry(8.0, capacity, leftDock, rightDock, maxLoadingTime, tileSize, dockHeight);
             ferries.add(ferry);
-            new Thread(ferry).start();
         }
 
         vehicleSpawner = new VehicleSpawner(docks, grid, maxCarsCount, spawnPoints, despawnPoints, originalTileTypes, 5000, vehicles);
@@ -82,15 +91,25 @@ public class Simulation implements Runnable {
         return vehicles;
     }
 
+    public static Map<Integer, Dock> getDocks() {
+        return docks;
+    }
+
     public VehicleSpawner getVehicleSpawner() {
         return vehicleSpawner;
     }
 
+    private void spawnFerries() {
+        for (Ferry ferry : ferries) {
+            new Thread(ferry).start();
+        }
+    }
+
     @Override
     public void run() {
+        spawnFerries();
         vehicleSpawner.startSpawning();
         while (true) {
-            //update();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -102,12 +121,6 @@ public class Simulation implements Runnable {
     public void stop() {
         if (vehicleSpawner != null) {
             vehicleSpawner.stopSpawning();
-        }
-    }
-
-    public void update() {
-        for (Ferry ferry : ferries) {
-            ferry.move();
         }
     }
 

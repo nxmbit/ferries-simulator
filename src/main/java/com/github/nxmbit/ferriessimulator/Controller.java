@@ -42,20 +42,28 @@ public class Controller implements Initializable {
 
     private int gridWidth;
     private int gridHeight;
+    private int dockHeight;
+    private double tileSize;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        createGrid();
-        draw();
-        setupSimulation();
-        updateUIState();
+        pane.widthProperty().addListener((obs, oldVal, newVal) -> setupIfReady());
+        pane.heightProperty().addListener((obs, oldVal, newVal) -> setupIfReady());
+    }
 
-        toggleGridButton.selectedProperty().addListener((obs, oldVal, newVal) -> toggleGridVisibility());
+    private void setupIfReady() {
+        if (pane.getWidth() > 0 && pane.getHeight() > 0) {
+            createGrid();
+            draw();
+            setupSimulation();
+            updateUIState();
+        }
     }
 
     public void setupSimulation() {
         simulation = new Simulation();
-        simulation.setup(2, 10, pane.getWidth(), pane.getHeight(), 100, 100, 50, 5, grid, OriginalTileTypes);
+        System.out.println("tileSize: " + tileSize);
+        simulation.setup(1, dockHeight, tileSize, 8000, grid, OriginalTileTypes);
         timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> draw()));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -139,19 +147,27 @@ public class Controller implements Initializable {
                 pane.getChildren().add(tile);
             }
         }
+
+        //draw ferries
+        if (simulation != null) {
+            for (Ferry ferry : simulation.getFerries()) {
+                pane.getChildren().add(ferry);
+            }
+        }
     }
 
     private void createGrid() {
         MapImport gridGenerator = new MapImport();
         gridWidth = gridGenerator.getGridWidth();
         gridHeight = gridGenerator.getGridHeight();
-        double tileSize = Math.max(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
+        dockHeight = gridGenerator.getDockHeight();
+        tileSize = Math.min(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
         grid = gridGenerator.generate(gridWidth, gridHeight, tileSize);
         OriginalTileTypes = gridGenerator.getOriginalTileTypes();
     }
 
     private void resizeGrid() {
-        double tileSize = Math.min(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
+        tileSize = Math.min(pane.getWidth() / gridWidth, pane.getHeight() / gridHeight);
 
         for (int i = 0; i < gridWidth; i++) {
             for (int j = 0; j < gridHeight; j++) {
@@ -164,3 +180,4 @@ public class Controller implements Initializable {
         }
     }
 }
+

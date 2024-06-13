@@ -7,11 +7,35 @@
   "docks": {
     "dock1": {
       "enteringVehicles": 4,
-      "exitingVehicles": 6
+      "exitingVehicles": 6,
+      "ferryCoordinates": {
+        "x": 12,
+        "y": 3
+      },
+      "criticalSectionCoordinates": {
+        "x": 10,
+        "y": 5
+      },
+      "criticalSectionReturnCoordinates": {
+        "x": 8,
+        "y": 4
+      }
     },
     "dock2": {
       "enteringVehicles": 6,
-      "exitingVehicles": 4
+      "exitingVehicles": 4,
+      "ferryCoordinates": {
+        "x": 111,
+        "y": 3
+      },
+      "criticalSectionCoordinates": {
+        "x": 117,
+        "y": 5
+      },
+      "criticalSectionReturnCoordinates": {
+        "x": 119,
+        "y": 6
+      }
     }
   }
 }

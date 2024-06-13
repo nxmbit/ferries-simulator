@@ -5,6 +5,8 @@ public enum VehicleState {
     AWAITING_ON_DOCK, //stan oczekiwania na przystani
     LOADED_ON_FERRY, //stan zaladowania na promie
     UNLOADING_FROM_FERRY, //stan rozladunku z promu (tu jest osobna kolejka do zjazdu!)
+    UNLOADED_FROM_FERRY, //stan zjazdu z exitingqueue
+    LOADING_ON_FERRY, //stan zaladunku na prom
     TRAVELLING_FROM_DOCK, //stan po wyjezdzie z przystani po przekroczeniu rzeki
     TURNING_LEFT,
     TURNING_RIGHT,
