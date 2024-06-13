@@ -19,7 +19,10 @@ public class Ferry extends Pane implements Runnable {
     private Semaphore vehicleSemaphore;
     private Rectangle ferryRectangle;
     private Label vehicleCountLabel;
+    private Label capacityLabel;
+    private Label loadingTimeLabel;
     private int dockHeight;
+    private long lastUpdateTime;
 
     public Ferry(double speed, int capacity, Dock currentDock, Dock targetDock, int maxLoadingTime, double tileSize, int dockHeight){
         this.speed = speed;
@@ -43,13 +46,32 @@ public class Ferry extends Pane implements Runnable {
         vehicleCountLabel = new Label("0");
         vehicleCountLabel.setTextFill(Color.WHITE);
 
-        getChildren().addAll(ferryRectangle, vehicleCountLabel);
+        capacityLabel = new Label(String.valueOf(capacity));
+        capacityLabel.setTextFill(Color.RED);
+
+        loadingTimeLabel = new Label("0");
+        loadingTimeLabel.setTextFill(Color.WHITE);
+
+        getChildren().addAll(ferryRectangle, vehicleCountLabel, capacityLabel, loadingTimeLabel);
 
         setLayoutX(currentDock.getFerryCoordinateX() * tileSize);
         setLayoutY(currentDock.getFerryCoordinateY() * tileSize);
 
+        positionLabels();
+
         System.out.println("koordynaty docku: " + currentDock.getFerryCoordinateX() + " " + currentDock.getFerryCoordinateY() + " " + tileSize);
         System.out.println("Inicjalizacja promu na współrzędnych: (" + getLayoutX() + ", " + getLayoutY() + ")");
+    }
+
+    private void positionLabels() {
+        capacityLabel.setLayoutX(5);
+        capacityLabel.setLayoutY(5);
+
+        vehicleCountLabel.setLayoutX(ferryRectangle.getWidth() / 2 - 10);
+        vehicleCountLabel.setLayoutY(ferryRectangle.getHeight() / 2 - 10);
+
+        loadingTimeLabel.setLayoutX(ferryRectangle.getWidth() / 2 - 10);
+        loadingTimeLabel.setLayoutY(ferryRectangle.getHeight() - 20);
     }
 
     @Override
@@ -57,7 +79,6 @@ public class Ferry extends Pane implements Runnable {
         while (true) {
             try {
                 Thread.sleep(100);
-                System.out.println(state);
                 updateFerryState();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -82,10 +103,18 @@ public class Ferry extends Pane implements Runnable {
     private void loadVehicles() {
         currentDock.setFerryAtDock(true);
         long startTime = System.currentTimeMillis();
+        loadingTimeLabel.setVisible(true);
         while (System.currentTimeMillis() - startTime < maxLoadingTime) {
             if (vehicleSemaphore.availablePermits() == 0) {
                 System.out.println("Prom pełny");
                 break;
+            }
+
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastUpdateTime >= 1000) {
+                long remainingTime = maxLoadingTime - (currentTime - startTime);
+                updateLoadingTimeLabel(remainingTime);
+                lastUpdateTime = currentTime;
             }
 
             currentDock.signalVehicleToEnterCriticalSection(); // Signal to the next vehicle in the entering queue
@@ -108,8 +137,14 @@ public class Ferry extends Pane implements Runnable {
                 currentDock.getCriticalSectionLock().unlock();
             }
         }
-        currentDock.setFerryAtDock(false);
-        state = FerryState.TRAVELING;
+
+        if (vehiclesOnBoard.isEmpty()) {
+            state = FerryState.LOADING; // Restart loading period if no vehicles on board
+        } else {
+            currentDock.setFerryAtDock(false);
+            loadingTimeLabel.setVisible(false); // Hide the label after loading
+            state = FerryState.TRAVELING;
+        }
     }
 
     private void unloadVehicles() {
@@ -154,6 +189,10 @@ public class Ferry extends Pane implements Runnable {
 
     private void updateVehicleCount() {
         Platform.runLater(() -> vehicleCountLabel.setText(String.valueOf(vehiclesOnBoard.size())));
+    }
+
+    private void updateLoadingTimeLabel(long remainingTime) {
+        Platform.runLater(() -> loadingTimeLabel.setText(String.valueOf(remainingTime / 1000) + " s"));
     }
 }
 

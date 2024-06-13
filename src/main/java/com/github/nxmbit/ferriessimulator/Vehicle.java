@@ -83,9 +83,6 @@ public class Vehicle implements Runnable {
         currentLock.lock();
         try {
 
-            prevX = x;
-            prevY = y;
-
             if (isAtDespawnPoint()) {
                 despawn();
                 return;
@@ -116,6 +113,9 @@ public class Vehicle implements Runnable {
                 // Ferry logic will handle these states
                 return;
             }
+
+            prevX = x;
+            prevY = y;
 
             Tile nextTile = getNextTile();
             if (nextTile != null) {
@@ -172,7 +172,7 @@ public class Vehicle implements Runnable {
             Lock prevLock = grid[prevX][prevY].getLock();
             prevLock.lock();
             try {
-                grid[prevX][prevY].setType(originalTileTypes[prevX][prevY]); // Przywracanie oryginalnego typu kafelka
+                grid[prevX][prevY].setType(originalTileTypes[prevX][prevY]);
             } finally {
                 prevLock.unlock();
             }
