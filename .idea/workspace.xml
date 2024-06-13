@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Working two-way one ferry">
+    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Improved labels on ferries">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Dock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Dock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/MapImport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map_properties.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/map_properties.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources/com/github/nxmbit/ferriessimulator",
+    "last_opened_file_path": "/home/nxmbit/Nextcloud/ferries-simulator/src/main/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,11 +69,13 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator" />
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/images/svgs" />
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator" />
       <recent name="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/images" />
     </key>
   </component>
@@ -96,8 +102,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17011.79" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17011.79" />
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
       </set>
     </attachedChunks>
   </component>
@@ -131,7 +137,9 @@
       <workItem from="1718116817566" duration="28295000" />
       <workItem from="1718198750717" duration="4268000" />
       <workItem from="1718203025296" duration="15646000" />
-      <workItem from="1718221211692" duration="52301000" />
+      <workItem from="1718221211692" duration="54233000" />
+      <workItem from="1718309085690" duration="199000" />
+      <workItem from="1718309301684" duration="8000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -189,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718302395144</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Improved labels on ferries">
+      <option name="closed" value="true" />
+      <created>1718305922547</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1718305922547</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,6 +230,7 @@
     <MESSAGE value="Fixed connection between road and dock (visually)" />
     <MESSAGE value="Working dock entry semaphore" />
     <MESSAGE value="Working two-way one ferry" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working two-way one ferry" />
+    <MESSAGE value="Improved labels on ferries" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved labels on ferries" />
   </component>
 </project>

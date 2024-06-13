@@ -21,6 +21,8 @@ public class MapImport {
     private int dock2ExitingCapacity;
     private double dock2FerryCoordinateX;
     private double dock2FerryCoordinateY;
+    private int dock1FerryQueueSize;
+    private int dock2FerryQueueSize;
     private int dock1CriticalSectionCoordinateX;
     private int dock1CriticalSectionCoordinateY;
     private int dock2CriticalSectionCoordinateX;
@@ -29,6 +31,20 @@ public class MapImport {
     private int dock1CriticalSectionReturnCoordinateY;
     private int dock2CriticalSectionReturnCoordinateX;
     private int dock2CriticalSectionReturnCoordinateY;
+    private int dock1FerryQueueCoordinateX;
+    private int dock1FerryQueueCoordinateY;
+    private int dock2FerryQueueCoordinateX;
+    private int dock2FerryQueueCoordinateY;
+    private int maxNumberOfFerries;
+    private int dock1ToDock2LaneCoordinateX;
+    private int dock1ToDock2LaneCoordinateY;
+    private int dock1ToDock2LaneCoordinateXEnd;
+    private int dock1ToDock2LaneCoordinateYEnd;
+    private int dock2ToDock1LaneCoordinateX;
+    private int dock2ToDock1LaneCoordinateY;
+    private int dock2ToDock1LaneCoordinateXEnd;
+    private int dock2ToDock1LaneCoordinateYEnd;
+
 
     public MapImport() {
         try (InputStream is = getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/map_properties.json")) {
@@ -38,27 +54,43 @@ public class MapImport {
             this.gridWidth = grid.getInt("width");
             this.gridHeight = grid.getInt("height");
             this.dockHeight = grid.getInt("docks_height");
+            this.maxNumberOfFerries = grid.getInt("max_number_of_ferries");
+            this.dock1ToDock2LaneCoordinateX = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("x");
+            this.dock1ToDock2LaneCoordinateY = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("y");
+            this.dock1ToDock2LaneCoordinateXEnd = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("x_end");
+            this.dock1ToDock2LaneCoordinateYEnd = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("y_end");
+            this.dock2ToDock1LaneCoordinateX = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("x");
+            this.dock2ToDock1LaneCoordinateY = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("y");
+            this.dock2ToDock1LaneCoordinateXEnd = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("x_end");
+            this.dock2ToDock1LaneCoordinateYEnd = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("y_end");
 
             JSONObject docks = obj.getJSONObject("docks");
             JSONObject dock1 = docks.getJSONObject("dock1");
             this.dock1EnteringCapacity = dock1.getInt("enteringVehicles");
             this.dock1ExitingCapacity = dock1.getInt("exitingVehicles");
+            this.dock1FerryQueueSize = dock1.getInt("ferryQueueSize");
             this.dock1FerryCoordinateX = dock1.getJSONObject("ferryCoordinates").getDouble("x");
             this.dock1FerryCoordinateY = dock1.getJSONObject("ferryCoordinates").getDouble("y");
             this.dock1CriticalSectionCoordinateX = dock1.getJSONObject("criticalSectionCoordinates").getInt("x");
             this.dock1CriticalSectionCoordinateY = dock1.getJSONObject("criticalSectionCoordinates").getInt("y");
             this.dock1CriticalSectionReturnCoordinateX = dock1.getJSONObject("criticalSectionReturnCoordinates").getInt("x");
             this.dock1CriticalSectionReturnCoordinateY = dock1.getJSONObject("criticalSectionReturnCoordinates").getInt("y");
+            this.dock1FerryQueueCoordinateX = dock1.getJSONObject("ferryQueueCoordinates").getInt("x");
+            this.dock1FerryQueueCoordinateY = dock1.getJSONObject("ferryQueueCoordinates").getInt("y");
 
             JSONObject dock2 = docks.getJSONObject("dock2");
             this.dock2EnteringCapacity = dock2.getInt("enteringVehicles");
             this.dock2ExitingCapacity = dock2.getInt("exitingVehicles");
+            this.dock2FerryQueueSize = dock2.getInt("ferryQueueSize");
             this.dock2FerryCoordinateX = dock2.getJSONObject("ferryCoordinates").getDouble("x");
             this.dock2FerryCoordinateY = dock2.getJSONObject("ferryCoordinates").getDouble("y");
             this.dock2CriticalSectionCoordinateX = dock2.getJSONObject("criticalSectionCoordinates").getInt("x");
             this.dock2CriticalSectionCoordinateY = dock2.getJSONObject("criticalSectionCoordinates").getInt("y");
             this.dock2CriticalSectionReturnCoordinateX = dock2.getJSONObject("criticalSectionReturnCoordinates").getInt("x");
             this.dock2CriticalSectionReturnCoordinateY = dock2.getJSONObject("criticalSectionReturnCoordinates").getInt("y");
+            this.dock2FerryQueueCoordinateX = dock2.getJSONObject("ferryQueueCoordinates").getInt("x");
+            this.dock2FerryQueueCoordinateY = dock2.getJSONObject("ferryQueueCoordinates").getInt("y");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,5 +265,65 @@ public class MapImport {
 
     public int getDock2CriticalSectionReturnCoordinateY() {
         return dock2CriticalSectionReturnCoordinateY;
+    }
+
+    public int getDock1FerryQueueSize() {
+        return dock1FerryQueueSize;
+    }
+
+    public int getDock2FerryQueueSize() {
+        return dock2FerryQueueSize;
+    }
+
+    public int getDock1FerryQueueCoordinateX() {
+        return dock1FerryQueueCoordinateX;
+    }
+
+    public int getDock1FerryQueueCoordinateY() {
+        return dock1FerryQueueCoordinateY;
+    }
+
+    public int getDock2FerryQueueCoordinateX() {
+        return dock2FerryQueueCoordinateX;
+    }
+
+    public int getDock2FerryQueueCoordinateY() {
+        return dock2FerryQueueCoordinateY;
+    }
+
+    public int getMaxNumberOfFerries() {
+        return maxNumberOfFerries;
+    }
+
+    public int getDock1ToDock2LaneCoordinateX() {
+        return dock1ToDock2LaneCoordinateX;
+    }
+
+    public int getDock1ToDock2LaneCoordinateY() {
+        return dock1ToDock2LaneCoordinateY;
+    }
+
+    public int getDock2ToDock1LaneCoordinateX() {
+        return dock2ToDock1LaneCoordinateX;
+    }
+
+    public int getDock2ToDock1LaneCoordinateY() {
+        return dock2ToDock1LaneCoordinateY;
+    }
+
+    public int getDock1ToDock2LaneCoordinateXEnd() {
+        return dock1ToDock2LaneCoordinateXEnd;
+    }
+
+    public int getDock1ToDock2LaneCoordinateYEnd() {
+        return dock1ToDock2LaneCoordinateYEnd;
+    }
+
+    public int getDock2ToDock1LaneCoordinateXEnd() {
+        return dock2ToDock1LaneCoordinateXEnd;
+    }
+
+    public int getDock2ToDock1LaneCoordinateYEnd() {
+        return dock2ToDock1LaneCoordinateYEnd;
     }
 }

@@ -63,11 +63,17 @@ public class Simulation implements Runnable {
         leftDock = new Dock(mapImport.getDock1EnteringCapacity(), mapImport.getDock1ExitingCapacity(),
                 mapImport.getDock1FerryCoordinateX(), mapImport.getDock1FerryCoordinateY(),
                 mapImport.getDock1CriticalSectionCoordinateX(), mapImport.getDock1CriticalSectionCoordinateY(),
-                mapImport.getDock1CriticalSectionReturnCoordinateX(), mapImport.getDock1CriticalSectionReturnCoordinateY());
+                mapImport.getDock1CriticalSectionReturnCoordinateX(), mapImport.getDock1CriticalSectionReturnCoordinateY(),
+                mapImport.getDock1FerryQueueSize(), mapImport.getDock1FerryQueueCoordinateX(), mapImport.getDock1FerryQueueCoordinateY(),
+                mapImport.getDock1ToDock2LaneCoordinateX(), mapImport.getDock1ToDock2LaneCoordinateY(),
+                mapImport.getDock1ToDock2LaneCoordinateXEnd(), mapImport.getDock1ToDock2LaneCoordinateYEnd());
         rightDock = new Dock(mapImport.getDock2EnteringCapacity(), mapImport.getDock2ExitingCapacity(),
                 mapImport.getDock2FerryCoordinateX(), mapImport.getDock2FerryCoordinateY(),
                 mapImport.getDock2CriticalSectionCoordinateX(), mapImport.getDock2CriticalSectionCoordinateY(),
-                mapImport.getDock2CriticalSectionReturnCoordinateX(), mapImport.getDock2CriticalSectionReturnCoordinateY());
+                mapImport.getDock2CriticalSectionReturnCoordinateX(), mapImport.getDock2CriticalSectionReturnCoordinateY(),
+                mapImport.getDock2FerryQueueSize(), mapImport.getDock2FerryQueueCoordinateX(), mapImport.getDock2FerryQueueCoordinateY(),
+                mapImport.getDock2ToDock1LaneCoordinateX(), mapImport.getDock2ToDock1LaneCoordinateY(),
+                mapImport.getDock2ToDock1LaneCoordinateXEnd(), mapImport.getDock2ToDock1LaneCoordinateYEnd());
         docks.put(1, leftDock);
         docks.put(2, rightDock);
 

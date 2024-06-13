@@ -11,9 +11,11 @@ public class Dock {
     private final Semaphore enteringSemaphore;
     private final Semaphore exitingSemaphore;
     private final Lock criticalSectionLock;
+    private final Lock dockLock;
     private final Condition criticalSectionCondition;
     private final ConcurrentLinkedQueue<Vehicle> enteringQueue;
     private final ConcurrentLinkedQueue<Vehicle> exitingQueue;
+    private final ConcurrentLinkedQueue<Ferry> ferryQueue;
     private final double ferryCoordinateX;
     private final double ferryCoordinateY;
     private final int criticalSectionCoordinateX;
@@ -22,15 +24,28 @@ public class Dock {
     private final AtomicBoolean isFerryAtDock;
     private int criticalSectionReturnCoordinateX;
     private int criticalSectionReturnCoordinateY;
+    private final int ferryQueueSize;
+    private final int ferryQueueCoordinateX;
+    private final int ferryQueueCoordinateY;
+
+    private final int laneToNextDockStartX;
+    private final int laneToNextDockStartY;
+    private final int laneToNextDockEndX;
+    private final int laneToNextDockEndY;
 
 
-    public Dock(int enteringCapacity, int exitingCapacity, double ferryCoordinateX, double ferryCoordinateY, int criticalSectionCoordinateX, int criticalSectionCoordinateY, int criticalSectionReturnCoordinateX, int criticalSectionReturnCoordinateY) {
+    public Dock(int enteringCapacity, int exitingCapacity, double ferryCoordinateX, double ferryCoordinateY, int criticalSectionCoordinateX,
+                int criticalSectionCoordinateY, int criticalSectionReturnCoordinateX, int criticalSectionReturnCoordinateY,
+                int ferryQueueSize, int ferryQueueCoordinateX, int ferryQueueCoordinateY, int laneToNextDockStartX, int laneToNextDockStartY,
+                int laneToNextDockEndX, int laneToNextDockEndY) {
         this.enteringSemaphore = new Semaphore(enteringCapacity);
         this.exitingSemaphore = new Semaphore(exitingCapacity);
         this.criticalSectionLock = new ReentrantLock();
+        this.dockLock = new ReentrantLock();
         this.criticalSectionCondition = criticalSectionLock.newCondition();
         this.enteringQueue = new ConcurrentLinkedQueue<>();
         this.exitingQueue = new ConcurrentLinkedQueue<>();
+        this.ferryQueue = new ConcurrentLinkedQueue<>();
         this.ferryCoordinateX = ferryCoordinateX;
         this.ferryCoordinateY = ferryCoordinateY;
         this.criticalSectionCoordinateX = criticalSectionCoordinateX;
@@ -39,6 +54,13 @@ public class Dock {
         this.isFerryAtDock = new AtomicBoolean(false);
         this.criticalSectionReturnCoordinateX = criticalSectionReturnCoordinateX;
         this.criticalSectionReturnCoordinateY = criticalSectionReturnCoordinateY;
+        this.ferryQueueSize = ferryQueueSize;
+        this.ferryQueueCoordinateX = ferryQueueCoordinateX;
+        this.ferryQueueCoordinateY = ferryQueueCoordinateY;
+        this.laneToNextDockStartX = laneToNextDockStartX;
+        this.laneToNextDockStartY = laneToNextDockStartY;
+        this.laneToNextDockEndX = laneToNextDockEndX;
+        this.laneToNextDockEndY = laneToNextDockEndY;
     }
 
     public boolean canEnterEnteringQ() {
@@ -111,6 +133,34 @@ public class Dock {
 
     public int getCriticalSectionReturnCoordinateY() {
         return criticalSectionReturnCoordinateY;
+    }
+
+    public int getFerryQueueSize() {
+        return ferryQueueSize;
+    }
+
+    public int getFerryQueueCoordinateX() {
+        return ferryQueueCoordinateX;
+    }
+
+    public int getFerryQueueCoordinateY() {
+        return ferryQueueCoordinateY;
+    }
+
+    public int getLaneToNextDockStartX() {
+        return laneToNextDockStartX;
+    }
+
+    public int getLaneToNextDockStartY() {
+        return laneToNextDockStartY;
+    }
+
+    public int getLaneToNextDockEndX() {
+        return laneToNextDockEndX;
+    }
+
+    public int getLaneToNextDockEndY() {
+        return laneToNextDockEndY;
     }
 
     public Vehicle getCriticalSectionVehicle() {

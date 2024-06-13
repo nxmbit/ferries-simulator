@@ -1,9 +1,11 @@
 package com.github.nxmbit.ferriessimulator;
+import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -24,6 +26,8 @@ public class Ferry extends Pane implements Runnable {
     private int dockHeight;
     private long lastUpdateTime;
 
+    private MovementState movementState;
+
     public Ferry(double speed, int capacity, Dock currentDock, Dock targetDock, int maxLoadingTime, double tileSize, int dockHeight){
         this.speed = speed;
         this.capacity = capacity;
@@ -34,6 +38,7 @@ public class Ferry extends Pane implements Runnable {
         this.state = FerryState.LOADING;
         this.vehiclesOnBoard = new ConcurrentLinkedQueue<>();
         this.vehicleSemaphore = new Semaphore(capacity, true);
+        this.movementState = MovementState.AT_DOCK;
         this.dockHeight = dockHeight;
         initializeFerry();
     }
@@ -166,26 +171,82 @@ public class Ferry extends Pane implements Runnable {
     }
 
     private void travel() {
-        double targetX = targetDock.getFerryCoordinateX() * tileSize;
-        double targetY = targetDock.getFerryCoordinateY() * tileSize;
+        double targetX;
+        double targetY;
+
+        switch (movementState) {
+            case GO_TO_LANE_START:
+                targetX = currentDock.getLaneToNextDockStartX() * tileSize;
+                targetY = currentDock.getLaneToNextDockStartY() * tileSize;
+                moveTo(targetX, targetY);
+
+                if (hasReachedTarget(targetX, targetY)) {
+                    movementState = MovementState.GO_TO_LANE_END;
+                    setLayoutX(targetX);
+                    setLayoutY(targetY);
+                }
+                break;
+
+            case GO_TO_LANE_END:
+                targetX = currentDock.getLaneToNextDockEndX() * tileSize;
+                targetY = currentDock.getLaneToNextDockEndY() * tileSize;
+                moveTo(targetX, targetY);
+
+                if (hasReachedTarget(targetX, targetY)) {
+                    movementState = MovementState.GO_TO_DOCK;
+                    setLayoutX(targetX);
+                    setLayoutY(targetY);
+                }
+                break;
+
+            case GO_TO_DOCK:
+                targetX = targetDock.getFerryCoordinateX() * tileSize;
+                targetY = targetDock.getFerryCoordinateY() * tileSize;
+                moveTo(targetX, targetY);
+
+                if (hasReachedTarget(targetX, targetY)) {
+                    movementState = MovementState.AT_DOCK;
+                    state = FerryState.UNLOADING;
+                    Dock temp = currentDock;
+                    currentDock = targetDock;
+                    targetDock = temp;
+                    setLayoutX(targetX);
+                    setLayoutY(targetY);
+                }
+                break;
+
+            case AT_DOCK:
+                movementState = MovementState.GO_TO_LANE_START;
+                break;
+        }
+    }
+
+    private void moveTo(double targetX, double targetY) {
         double deltaX = targetX - getLayoutX();
         double deltaY = targetY - getLayoutY();
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        double stepX = speed * (deltaX / distance);
-        double stepY = speed * (deltaY / distance);
+        if (distance > speed) {
+            double stepX = speed * (deltaX / distance);
+            double stepY = speed * (deltaY / distance);
 
-        setLayoutX(getLayoutX() + stepX);
-        setLayoutY(getLayoutY() + stepY);
-
-        if (distance <= speed) {
+            setLayoutX(getLayoutX() + stepX);
+            setLayoutY(getLayoutY() + stepY);
+        } else {
             setLayoutX(targetX);
             setLayoutY(targetY);
-            Dock temp = currentDock;
-            currentDock = targetDock;
-            targetDock = temp;
-            state = FerryState.UNLOADING;
         }
     }
+
+    private boolean hasReachedTarget(double targetX, double targetY) {
+        boolean reached = Math.abs(getLayoutX() - targetX) < 1 && Math.abs(getLayoutY() - targetY) < 1;
+        if (reached) {
+            System.out.println("Reached target: (" + targetX + ", " + targetY + ")");
+        } else {
+            System.out.println("Not yet at target: (" + targetX + ", " + targetY + ")");
+        }
+        return reached;
+    }
+
 
     private void updateVehicleCount() {
         Platform.runLater(() -> vehicleCountLabel.setText(String.valueOf(vehiclesOnBoard.size())));
@@ -199,5 +260,12 @@ public class Ferry extends Pane implements Runnable {
 enum FerryState {
     LOADING,
     TRAVELING,
-    UNLOADING
+    UNLOADING,
+}
+
+enum MovementState {
+    AT_DOCK,
+    GO_TO_LANE_START,
+    GO_TO_LANE_END,
+    GO_TO_DOCK
 }
