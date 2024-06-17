@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VehicleSpawner {
     private Tile[][] grid;
@@ -31,7 +32,7 @@ public class VehicleSpawner {
         this.vehicles = vehicles;
         this.spawnPoints = spawnPoints;
         this.despawnPoints = despawnPoints;
-        this.executorService = Executors.newScheduledThreadPool(1);  // Use single-threaded executor for spawning
+        this.executorService = Executors.newScheduledThreadPool(1);
     }
 
     public void startSpawning() {
@@ -93,6 +94,16 @@ public class VehicleSpawner {
     public void stopSpawning() {
         if (executorService != null) {
             executorService.shutdown();
+        }
+    }
+
+    public void stopAllVehiclesAndSpawning() {
+        stopSpawning();
+        synchronized (vehicles) {
+            for (Vehicle vehicle : vehicles) {
+                vehicle.stop();
+            }
+            vehicles.clear();
         }
     }
 

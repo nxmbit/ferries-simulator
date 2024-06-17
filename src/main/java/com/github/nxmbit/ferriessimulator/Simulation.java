@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class Simulation implements Runnable {
     private static final List<Vehicle> vehicles = Collections.synchronizedList(new ArrayList<>());
-    private List<Ferry> ferries;
+    private final List<Ferry> ferries;
     private VehicleSpawner vehicleSpawner;
     private int maxCarsCount;
 
@@ -22,14 +22,17 @@ public class Simulation implements Runnable {
     private Map<Integer, Tile> despawnPoints;
     private static Map<Integer, Dock> docks;
 
+    private boolean simulationRunning;
+
 
     public Simulation() {
-        this.ferries = new ArrayList<>();
+        this.ferries = Collections.synchronizedList(new ArrayList<>());
         this.spawnPoints = new HashMap<>();
         this.despawnPoints = new HashMap<>();
         this.docks = new HashMap<>();
         this.maxCarsCount = 5;
         this.mapImport = new MapImport();
+        this.simulationRunning = true;
     }
 
     private void setSpawnAndDespawnPoints(Tile[][] grid) {
@@ -77,8 +80,6 @@ public class Simulation implements Runnable {
         docks.put(1, leftDock);
         docks.put(2, rightDock);
 
-        System.out.println("koordynaty docku: " + leftDock.getFerryCoordinateX() + " " + leftDock.getFerryCoordinateY() + " " + tileSize);
-
         ferries.clear();
         for (int i = 0; i < ferryCount; i++) {
             int capacity = 2 + new Random().nextInt(5) * 2; // Random capacity between 2 and 10
@@ -115,7 +116,7 @@ public class Simulation implements Runnable {
     public void run() {
         spawnFerries();
         vehicleSpawner.startSpawning();
-        while (true) {
+        while (simulationRunning) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -126,8 +127,18 @@ public class Simulation implements Runnable {
 
     public void stop() {
         if (vehicleSpawner != null) {
-            vehicleSpawner.stopSpawning();
+            vehicleSpawner.stopAllVehiclesAndSpawning();
         }
+
+        synchronized (ferries) {
+            for (Ferry ferry : ferries) {
+                ferry.stop();
+            }
+
+            ferries.clear();
+        }
+
+        simulationRunning = false;
     }
 
     public static void removeVehicle(Vehicle vehicle) {

@@ -60,6 +60,10 @@ public class Vehicle implements Runnable {
         this.dock = dock;
     }
 
+    public void stop() {
+        running = false;
+    }
+
     @Override
     public void run() {
         try {

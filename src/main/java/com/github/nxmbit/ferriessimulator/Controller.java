@@ -63,7 +63,7 @@ public class Controller implements Initializable {
     public void setupSimulation() {
         simulation = new Simulation();
         System.out.println("tileSize: " + tileSize);
-        simulation.setup(1, dockHeight, tileSize, 8000, grid, OriginalTileTypes);
+        simulation.setup(2, dockHeight, tileSize, 8000, grid, OriginalTileTypes);
         timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> draw()));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -74,6 +74,7 @@ public class Controller implements Initializable {
 
     public void startSimulation() {
         if (!simulationRunning) {
+            setupSimulation();
             new Thread(simulation).start();
             timeline.play();
             simulationRunning = true;
@@ -85,9 +86,16 @@ public class Controller implements Initializable {
         if (simulationRunning) {
             timeline.stop();
             simulation.stop();
+            clearSimulation();
             simulationRunning = false;
             updateUIState();
         }
+    }
+
+    private void clearSimulation() {
+        pane.getChildren().clear();
+        createGrid();
+        draw();
     }
 
     public void adjustSpawnInterval() {
@@ -150,8 +158,10 @@ public class Controller implements Initializable {
 
         //draw ferries
         if (simulation != null) {
-            for (Ferry ferry : simulation.getFerries()) {
-                pane.getChildren().add(ferry);
+            synchronized (simulation.getFerries()) {
+                for (Ferry ferry : simulation.getFerries()) {
+                    pane.getChildren().add(ferry);
+                }
             }
         }
     }

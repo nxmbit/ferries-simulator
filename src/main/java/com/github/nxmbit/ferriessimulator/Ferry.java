@@ -1,5 +1,5 @@
 package com.github.nxmbit.ferriessimulator;
-import javafx.animation.PathTransition;
+
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Ferry extends Pane implements Runnable {
     private double speed;
@@ -26,6 +27,8 @@ public class Ferry extends Pane implements Runnable {
     private int dockHeight;
     private long lastUpdateTime;
 
+    private AtomicBoolean running;
+
     private MovementState movementState;
 
     public Ferry(double speed, int capacity, Dock currentDock, Dock targetDock, int maxLoadingTime, double tileSize, int dockHeight){
@@ -40,6 +43,7 @@ public class Ferry extends Pane implements Runnable {
         this.vehicleSemaphore = new Semaphore(capacity, true);
         this.movementState = MovementState.AT_DOCK;
         this.dockHeight = dockHeight;
+        this.running = new AtomicBoolean(true);
         initializeFerry();
     }
 
@@ -63,9 +67,6 @@ public class Ferry extends Pane implements Runnable {
         setLayoutY(currentDock.getFerryCoordinateY() * tileSize);
 
         positionLabels();
-
-        System.out.println("koordynaty docku: " + currentDock.getFerryCoordinateX() + " " + currentDock.getFerryCoordinateY() + " " + tileSize);
-        System.out.println("Inicjalizacja promu na współrzędnych: (" + getLayoutX() + ", " + getLayoutY() + ")");
     }
 
     private void positionLabels() {
@@ -79,9 +80,13 @@ public class Ferry extends Pane implements Runnable {
         loadingTimeLabel.setLayoutY(ferryRectangle.getHeight() - 20);
     }
 
+    public void stop() {
+        running.set(false);
+    }
+
     @Override
     public void run() {
-        while (true) {
+        while (running.get()) {
             try {
                 Thread.sleep(100);
                 updateFerryState();
@@ -109,7 +114,7 @@ public class Ferry extends Pane implements Runnable {
         currentDock.setFerryAtDock(true);
         long startTime = System.currentTimeMillis();
         loadingTimeLabel.setVisible(true);
-        while (System.currentTimeMillis() - startTime < maxLoadingTime) {
+        while ((System.currentTimeMillis() - startTime < maxLoadingTime) && running.get()) {
             if (vehicleSemaphore.availablePermits() == 0) {
                 System.out.println("Prom pełny");
                 break;
@@ -239,11 +244,6 @@ public class Ferry extends Pane implements Runnable {
 
     private boolean hasReachedTarget(double targetX, double targetY) {
         boolean reached = Math.abs(getLayoutX() - targetX) < 1 && Math.abs(getLayoutY() - targetY) < 1;
-        if (reached) {
-            System.out.println("Reached target: (" + targetX + ", " + targetY + ")");
-        } else {
-            System.out.println("Not yet at target: (" + targetX + ", " + targetY + ")");
-        }
         return reached;
     }
 

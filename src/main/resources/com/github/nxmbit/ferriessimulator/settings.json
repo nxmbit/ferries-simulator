@@ -1,0 +1,10 @@
+{
+  "maxVehicles": 20,
+  "vehiclesSpawnInterval": 3000,
+  "minRandomFerryCapacity": 2,
+  "maxRandomFerryCapacity": 10,
+  "ferrySpeed": 8.0,
+
+
+
+}
