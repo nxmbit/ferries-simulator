@@ -267,5 +267,6 @@ enum MovementState {
     AT_DOCK,
     GO_TO_LANE_START,
     GO_TO_LANE_END,
-    GO_TO_DOCK
+    GO_TO_DOCK,
+    IN_QUEUE
 }

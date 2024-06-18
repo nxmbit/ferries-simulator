@@ -1,34 +1,103 @@
-<?import javafx.scene.layout.Pane?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.ToggleButton?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.github.nxmbit.ferriessimulator.Controller">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.github.nxmbit.ferriessimulator.Controller">
     <children>
-        <VBox minWidth="200">
+        <MenuBar>
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox>
             <children>
-                <Button fx:id="startButton" text="Start Simulation" onAction="#startSimulation" />
-                <Button fx:id="stopButton" text="Stop Simulation" onAction="#stopSimulation" />
-                <Label text="Spawn Interval:" />
-                <Slider fx:id="spawnIntervalSlider" min="1000" max="10000" value="5000" />
-                <Button fx:id="setIntervalButton" text="Set Interval" onAction="#adjustSpawnInterval" />
-                <Label text="Max Vehicles:" />
-                <TextField fx:id="maxVehiclesField" promptText="Enter max vehicles" />
-                <Button fx:id="setMaxVehiclesButton" text="Set Max Vehicles" onAction="#setMaxVehicles" />
-                <Button fx:id="spawnVehicleButton" text="Spawn Vehicle" onAction="#spawnVehicle" />
-                <ToggleButton fx:id="toggleGridButton" text="Toggle Grid" onAction="#toggleGridVisibility" />
+                <VBox minWidth="200" prefHeight="936.0" prefWidth="256.0">
+                    <children>
+                        <ScrollPane fitToWidth="true" fitToHeight="true">
+                            <content>
+                                <VBox fx:id="accordionVBox">
+                                    <children>
+                                        <TitledPane text="Simulation Controls">
+                                            <content>
+                                                <VBox>
+                                                    <Button fx:id="startButton" onAction="#startSimulation" text="Start Simulation" />
+                                                    <Button fx:id="stopButton" onAction="#stopSimulation" text="Stop Simulation" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane text="Vehicles">
+                                            <content>
+                                                <VBox>
+                                                    <Label text="Spawn Interval (seconds):" />
+                                                    <Slider fx:id="spawnIntervalSlider" max="10" min="1" value="5" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label text="Max Vehicles:" />
+                                                    <Spinner fx:id="maxVehiclesSpinner" promptText="Enter max vehicles" />
+                                                    <Label text="Left-Right Dock Spawn Probability:" />
+                                                    <Slider fx:id="dockSpawnProbabilitySlider" max="100" min="0" value="50" majorTickUnit="10" blockIncrement="10" snapToTicks="true" />
+                                                    <Label fx:id="leftDockProbabilityLabel" text="Left Dock Probability: 50%" />
+                                                    <Label fx:id="rightDockProbabilityLabel" text="Right Dock Probability: 50%" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane text="View Options">
+                                            <content>
+                                                <VBox>
+                                                    <ToggleButton fx:id="toggleGridButton" onAction="#toggleGridVisibility" text="Toggle Grid" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="0" left="0" right="20" top="0" />
+                    </VBox.margin>
+                </VBox>
+                <Separator orientation="VERTICAL" />
+                <Pane fx:id="pane" minHeight="936" minWidth="1664" />
             </children>
-            <VBox.margin>
-                <Insets top="0" right="20" bottom="0" left="0"/>
-            </VBox.margin>
-        </VBox>
-        <Separator orientation="VERTICAL"/>
-        <Pane fx:id="pane" minWidth="1664" minHeight="936" />
+        </HBox>
     </children>
-</HBox>
+</VBox>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<!--<?import javafx.geometry.*?>-->
+<!--<?import javafx.scene.control.*?>-->
+<!--<?import javafx.scene.layout.*?>-->
+
+<!--<HBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.github.nxmbit.ferriessimulator.Controller">-->
+<!--    <children>-->
+<!--        <VBox minWidth="200" prefHeight="936.0" prefWidth="256.0">-->
+<!--            <children>-->
+<!--                <Button fx:id="startButton" onAction="#startSimulation" text="Start Simulation" />-->
+<!--                <Button fx:id="stopButton" onAction="#stopSimulation" text="Stop Simulation" />-->
+<!--                <Label text="Spawn Interval:" />-->
+<!--                <Slider fx:id="spawnIntervalSlider" max="10000" min="1000" value="5000" />-->
+<!--                <Button fx:id="setIntervalButton" onAction="#adjustSpawnInterval" text="Set Interval" />-->
+<!--                <Label text="Max Vehicles:" />-->
+<!--                <TextField fx:id="maxVehiclesField" promptText="Enter max vehicles" />-->
+<!--                <Button fx:id="setMaxVehiclesButton" onAction="#setMaxVehicles" text="Set Max Vehicles" />-->
+<!--                <Button fx:id="spawnVehicleButton" onAction="#spawnVehicle" text="Spawn Vehicle" />-->
+<!--                <ToggleButton fx:id="toggleGridButton" onAction="#toggleGridVisibility" text="Toggle Grid" />-->
+<!--            </children>-->
+<!--            <VBox.margin>-->
+<!--                <Insets bottom="0" left="0" right="20" top="0" />-->
+<!--            </VBox.margin>-->
+<!--        </VBox>-->
+<!--        <Separator orientation="VERTICAL" />-->
+<!--        <Pane fx:id="pane" minHeight="936" minWidth="1664" />-->
+<!--    </children>-->
+<!--</HBox>-->
+
+
+

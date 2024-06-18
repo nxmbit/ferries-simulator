@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Working separate lanes for ferries">
+    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Fixed &quot;stop simulation&quot; button">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Ferry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Vehicle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleSpawner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/VehicleSpawner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +139,8 @@
       <workItem from="1718221211692" duration="54233000" />
       <workItem from="1718309085690" duration="199000" />
       <workItem from="1718309301684" duration="8000" />
-      <workItem from="1718630124670" duration="3141000" />
+      <workItem from="1718630124670" duration="11164000" />
+      <workItem from="1718733098225" duration="1532000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -214,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718322179396</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Fixed &quot;stop simulation&quot; button">
+      <option name="closed" value="true" />
+      <created>1718633785549</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1718633785549</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,6 +249,7 @@
     <MESSAGE value="Working two-way one ferry" />
     <MESSAGE value="Improved labels on ferries" />
     <MESSAGE value="Working separate lanes for ferries" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working separate lanes for ferries" />
+    <MESSAGE value="Fixed &quot;stop simulation&quot; button" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed &quot;stop simulation&quot; button" />
   </component>
 </project>

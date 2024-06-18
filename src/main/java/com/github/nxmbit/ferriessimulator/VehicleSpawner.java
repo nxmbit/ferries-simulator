@@ -21,7 +21,9 @@ public class VehicleSpawner {
     private final Random random = new Random();
     private final double minSpeed = 4.0; // Minimalna prędkość pojazdu
     private final double maxSpeed = 8.0; // Maksymalna prędkość pojazdu
-    private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.PURPLE}; // Jaskrawe kolory
+    private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.PURPLE};
+    private double leftDockSpawnProbability;
+
 
     public VehicleSpawner(Map<Integer, Dock> docks, Tile[][] grid, int maxCars, Map<Integer, Tile> spawnPoints, Map<Integer, Tile> despawnPoints, TileType[][] originalTileTypes, long spawnInterval, List<Vehicle> vehicles) {
         this.docks = docks;
@@ -33,10 +35,15 @@ public class VehicleSpawner {
         this.spawnPoints = spawnPoints;
         this.despawnPoints = despawnPoints;
         this.executorService = Executors.newScheduledThreadPool(1);
+        this.leftDockSpawnProbability = 0.5;
     }
 
     public void startSpawning() {
         executorService.scheduleAtFixedRate(this::trySpawnVehicle, 0, spawnInterval, TimeUnit.MILLISECONDS);
+    }
+
+    public void setDockSpawnProbability(double leftDockSpawnProbability) {
+        this.leftDockSpawnProbability = leftDockSpawnProbability;
     }
 
     public void trySpawnVehicle() {
@@ -48,6 +55,7 @@ public class VehicleSpawner {
             }
         }
     }
+
 
     public void attemptSpawnVehicle(int spawnPointId) {
         Tile spawnPoint = spawnPoints.get(spawnPointId);

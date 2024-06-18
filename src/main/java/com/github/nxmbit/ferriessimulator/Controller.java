@@ -5,12 +5,15 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.fxml.Initializable;
+import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.security.cert.PolicyNode;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -27,15 +30,17 @@ public class Controller implements Initializable {
     @FXML
     private Button stopButton;
     @FXML
-    private Button setIntervalButton;
-    @FXML
-    private Button spawnVehicleButton;
-    @FXML
-    private TextField maxVehiclesField;
-    @FXML
-    private Button setMaxVehiclesButton;
+    private Spinner<Integer> maxVehiclesSpinner;
     @FXML
     private ToggleButton toggleGridButton;
+    @FXML
+    private VBox accordionVBox;
+    @FXML
+    private Slider dockSpawnProbabilitySlider;
+    @FXML
+    private Label leftDockProbabilityLabel;
+    @FXML
+    private Label rightDockProbabilityLabel;
 
     private Tile[][] grid;
     private TileType[][] OriginalTileTypes;
@@ -49,6 +54,10 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         pane.widthProperty().addListener((obs, oldVal, newVal) -> setupIfReady());
         pane.heightProperty().addListener((obs, oldVal, newVal) -> setupIfReady());
+        //setupTitledPaneListeners();
+        setupSpawnIntervalSlider();
+        setupMaxVehiclesSpinner();
+        setupDockSpawnProbabilitySlider();
     }
 
     private void setupIfReady() {
@@ -59,6 +68,93 @@ public class Controller implements Initializable {
             updateUIState();
         }
     }
+
+    private void setupSpawnIntervalSlider() {
+        spawnIntervalSlider.setLabelFormatter(new StringConverter<Double>() {
+            @Override
+            public String toString(Double object) {
+                return String.format("%.0f", object);
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return Double.valueOf(string);
+            }
+        });
+
+        spawnIntervalSlider.setMajorTickUnit(1);
+        spawnIntervalSlider.setMinorTickCount(0);
+        spawnIntervalSlider.setSnapToTicks(true);
+        spawnIntervalSlider.setShowTickLabels(true);
+        spawnIntervalSlider.setShowTickMarks(true);
+
+        spawnIntervalSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulation != null && simulationRunning) {
+                simulation.getVehicleSpawner().setSpawnInterval(newValue.longValue() * 1000);
+            }
+        });
+    }
+
+    private void setupDockSpawnProbabilitySlider() {
+        dockSpawnProbabilitySlider.setMin(0);
+        dockSpawnProbabilitySlider.setMax(100);
+        dockSpawnProbabilitySlider.setMajorTickUnit(10);
+        dockSpawnProbabilitySlider.setMinorTickCount(1);
+        dockSpawnProbabilitySlider.setSnapToTicks(true);
+        dockSpawnProbabilitySlider.setShowTickMarks(true);
+        dockSpawnProbabilitySlider.setShowTickLabels(true);
+
+        dockSpawnProbabilitySlider.setLabelFormatter(new StringConverter<Double>() {
+            @Override
+            public String toString(Double object) {
+                return String.format("%.0f%%", object);
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return Double.valueOf(string.replace("%", ""));
+            }
+        });
+
+        dockSpawnProbabilitySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double leftDockProbability = newValue.doubleValue() / 100.0;
+            double rightDockProbability = 1 - leftDockProbability;
+            leftDockProbabilityLabel.setText(String.format("Left Dock Probability: %.0f%%", leftDockProbability * 100));
+            rightDockProbabilityLabel.setText(String.format("Right Dock Probability: %.0f%%", rightDockProbability * 100));
+            if (simulation != null && simulationRunning) {
+                simulation.getVehicleSpawner().setDockSpawnProbability(leftDockProbability);
+            }
+        });
+    }
+
+    private void setupMaxVehiclesSpinner() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5);
+        maxVehiclesSpinner.setValueFactory(valueFactory);
+
+        maxVehiclesSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (simulation != null && simulationRunning) {
+                simulation.getVehicleSpawner().setMaxCars(newValue);
+            }
+        });
+    }
+
+// collapse all titled panes except the one that was clicked
+//    private void setupTitledPaneListeners() {
+//        for (javafx.scene.Node node : accordionVBox.getChildren()) {
+//            if (node instanceof TitledPane) {
+//                TitledPane titledPane = (TitledPane) node;
+//                titledPane.expandedProperty().addListener((obs, wasExpanded, isNowExpanded) -> {
+//                    if (isNowExpanded) {
+//                        for (javafx.scene.Node otherNode : accordionVBox.getChildren()) {
+//                            if (otherNode instanceof TitledPane && otherNode != titledPane) {
+//                                ((TitledPane) otherNode).setExpanded(false);
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
 
     public void setupSimulation() {
         simulation = new Simulation();
@@ -105,17 +201,6 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML
-    public void setMaxVehicles() {
-        if (simulationRunning) {
-            try {
-                int maxVehicles = Integer.parseInt(maxVehiclesField.getText());
-                simulation.getVehicleSpawner().setMaxCars(maxVehicles);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number format for max vehicles");
-            }
-        }
-    }
 
     public void spawnVehicle() {
         if (simulationRunning) {
@@ -126,11 +211,9 @@ public class Controller implements Initializable {
     private void updateUIState() {
         startButton.setDisable(simulationRunning);
         stopButton.setDisable(!simulationRunning);
-        setIntervalButton.setDisable(!simulationRunning);
-        spawnVehicleButton.setDisable(!simulationRunning);
+        //spawnVehicleButton.setDisable(!simulationRunning);
         spawnIntervalSlider.setDisable(!simulationRunning);
-        maxVehiclesField.setDisable(!simulationRunning);
-        setMaxVehiclesButton.setDisable(!simulationRunning);
+        maxVehiclesSpinner.setDisable(!simulationRunning);
     }
 
     public void toggleGridVisibility() {
@@ -158,11 +241,11 @@ public class Controller implements Initializable {
 
         //draw ferries
         if (simulation != null) {
-            synchronized (simulation.getFerries()) {
+            //synchronized (simulation.getFerries()) {
                 for (Ferry ferry : simulation.getFerries()) {
                     pane.getChildren().add(ferry);
                 }
-            }
+            //}
         }
     }
 
