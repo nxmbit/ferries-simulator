@@ -12,38 +12,49 @@ public class MapImport {
 
     private int gridWidth;
     private int gridHeight;
+
     private int dockHeight;
+
     private int dock1EnteringCapacity;
     private int dock1ExitingCapacity;
     private double dock1FerryCoordinateX;
     private double dock1FerryCoordinateY;
+
     private int dock2EnteringCapacity;
     private int dock2ExitingCapacity;
     private double dock2FerryCoordinateX;
     private double dock2FerryCoordinateY;
+
     private int dock1FerryQueueSize;
     private int dock2FerryQueueSize;
+
     private int dock1CriticalSectionCoordinateX;
     private int dock1CriticalSectionCoordinateY;
     private int dock2CriticalSectionCoordinateX;
     private int dock2CriticalSectionCoordinateY;
+
     private int dock1CriticalSectionReturnCoordinateX;
     private int dock1CriticalSectionReturnCoordinateY;
     private int dock2CriticalSectionReturnCoordinateX;
     private int dock2CriticalSectionReturnCoordinateY;
+
     private int dock1FerryQueueCoordinateX;
     private int dock1FerryQueueCoordinateY;
     private int dock2FerryQueueCoordinateX;
     private int dock2FerryQueueCoordinateY;
     private int maxNumberOfFerries;
+
     private int dock1ToDock2LaneCoordinateX;
     private int dock1ToDock2LaneCoordinateY;
     private int dock1ToDock2LaneCoordinateXEnd;
     private int dock1ToDock2LaneCoordinateYEnd;
+    private int dock1ToDock2GoDownToQueueCoordinateX;
+
     private int dock2ToDock1LaneCoordinateX;
     private int dock2ToDock1LaneCoordinateY;
     private int dock2ToDock1LaneCoordinateXEnd;
     private int dock2ToDock1LaneCoordinateYEnd;
+    private int dock2ToDock1GoDownToQueueCoordinateX;
 
 
     public MapImport() {
@@ -59,10 +70,13 @@ public class MapImport {
             this.dock1ToDock2LaneCoordinateY = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("y");
             this.dock1ToDock2LaneCoordinateXEnd = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("x_end");
             this.dock1ToDock2LaneCoordinateYEnd = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("y_end");
+            this.dock1ToDock2GoDownToQueueCoordinateX = grid.getJSONObject("dock1ToDock2LaneCoordinates").getInt("x_go_down_to_queue");
+
             this.dock2ToDock1LaneCoordinateX = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("x");
             this.dock2ToDock1LaneCoordinateY = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("y");
             this.dock2ToDock1LaneCoordinateXEnd = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("x_end");
             this.dock2ToDock1LaneCoordinateYEnd = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("y_end");
+            this.dock2ToDock1GoDownToQueueCoordinateX = grid.getJSONObject("dock2ToDock1LaneCoordinates").getInt("x_go_down_to_queue");
 
             JSONObject docks = obj.getJSONObject("docks");
             JSONObject dock1 = docks.getJSONObject("dock1");
@@ -325,5 +339,13 @@ public class MapImport {
 
     public int getDock2ToDock1LaneCoordinateYEnd() {
         return dock2ToDock1LaneCoordinateYEnd;
+    }
+
+    public int getDock1ToDock2GoDownToQueueCoordinateX() {
+        return dock1ToDock2GoDownToQueueCoordinateX;
+    }
+
+    public int getDock2ToDock1GoDownToQueueCoordinateX() {
+        return dock2ToDock1GoDownToQueueCoordinateX;
     }
 }

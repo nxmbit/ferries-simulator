@@ -8,13 +8,16 @@
       "x": 15,
       "y": 10,
       "x_end": 107,
-      "y_end": 10
+      "y_end": 10,
+      "x_go_down_to_queue": 98
+
     },
     "dock2ToDock1LaneCoordinates": {
       "x": 107,
       "y": 4,
       "x_end": 15,
-      "y_end": 4
+      "y_end": 4,
+      "x_go_down_to_queue": 25
     }
   },
   "docks": {
@@ -35,14 +38,14 @@
         "y": 8
       },
       "ferryQueueCoordinates": {
-        "x": 10,
-        "y": 7
+        "x": 17,
+        "y": 20
       }
     },
     "dock2": {
       "enteringVehicles": 6,
       "exitingVehicles": 4,
-      "ferryQueueSize": 3,
+      "ferryQueueSize": 2,
       "ferryCoordinates": {
         "x": 111,
         "y": 7
@@ -56,8 +59,8 @@
         "y": 10
       },
       "ferryQueueCoordinates": {
-        "x": 117,
-        "y": 7
+        "x": 106,
+        "y": 20
       }
     }
   }

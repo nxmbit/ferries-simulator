@@ -13,6 +13,7 @@ public class Dock {
     private final Lock criticalSectionLock;
     private final Lock dockLock;
     private final Condition criticalSectionCondition;
+    private final Condition dockAvailableCondition;
     private final ConcurrentLinkedQueue<Vehicle> enteringQueue;
     private final ConcurrentLinkedQueue<Vehicle> exitingQueue;
     private final ConcurrentLinkedQueue<Ferry> ferryQueue;
@@ -32,17 +33,19 @@ public class Dock {
     private final int laneToNextDockStartY;
     private final int laneToNextDockEndX;
     private final int laneToNextDockEndY;
+    private final int goDownToNextDockQueueX;
 
 
     public Dock(int enteringCapacity, int exitingCapacity, double ferryCoordinateX, double ferryCoordinateY, int criticalSectionCoordinateX,
                 int criticalSectionCoordinateY, int criticalSectionReturnCoordinateX, int criticalSectionReturnCoordinateY,
                 int ferryQueueSize, int ferryQueueCoordinateX, int ferryQueueCoordinateY, int laneToNextDockStartX, int laneToNextDockStartY,
-                int laneToNextDockEndX, int laneToNextDockEndY) {
+                int laneToNextDockEndX, int laneToNextDockEndY, int goDownToNextDockQueueX) {
         this.enteringSemaphore = new Semaphore(enteringCapacity);
         this.exitingSemaphore = new Semaphore(exitingCapacity);
         this.criticalSectionLock = new ReentrantLock();
         this.dockLock = new ReentrantLock();
         this.criticalSectionCondition = criticalSectionLock.newCondition();
+        this.dockAvailableCondition = dockLock.newCondition();
         this.enteringQueue = new ConcurrentLinkedQueue<>();
         this.exitingQueue = new ConcurrentLinkedQueue<>();
         this.ferryQueue = new ConcurrentLinkedQueue<>();
@@ -61,6 +64,7 @@ public class Dock {
         this.laneToNextDockStartY = laneToNextDockStartY;
         this.laneToNextDockEndX = laneToNextDockEndX;
         this.laneToNextDockEndY = laneToNextDockEndY;
+        this.goDownToNextDockQueueX = goDownToNextDockQueueX;
     }
 
     public boolean canEnterEnteringQ() {
@@ -135,8 +139,12 @@ public class Dock {
         return criticalSectionReturnCoordinateY;
     }
 
-    public int getFerryQueueSize() {
+    public int getMaxFerryQueueSize() {
         return ferryQueueSize;
+    }
+
+    public int getFerryQueueSize() {
+        return ferryQueue.size();
     }
 
     public int getFerryQueueCoordinateX() {
@@ -163,6 +171,10 @@ public class Dock {
         return laneToNextDockEndY;
     }
 
+    public int getGoDownToNextDockQueueX() {
+        return goDownToNextDockQueueX;
+    }
+
     public Vehicle getCriticalSectionVehicle() {
         return criticalSectionVehicle;
     }
@@ -182,6 +194,69 @@ public class Dock {
         } finally {
             criticalSectionLock.unlock();
         }
+    }
+
+    public void addFerryToQueueOnSpawn(Ferry ferry) {
+        ferryQueue.add(ferry);
+    }
+
+    public synchronized void addFerryToQueue(Ferry ferry) {
+        ferryQueue.add(ferry);
+        updateQueuePositions();
+    }
+
+    // Metoda usuwania promu z kolejki
+    public synchronized Ferry pollFerryFromQueue() {
+        Ferry ferry = ferryQueue.poll();
+        updateQueuePositions();
+        return ferry;
+    }
+
+    public synchronized void updateQueuePositions() {
+        int position = 0;
+        boolean notLoading;
+        for (Ferry ferry : ferryQueue) {
+            notLoading = ferry.setQueuePosition(position++);
+            if (!notLoading) {
+                position--;
+            }
+        }
+    }
+
+    public Ferry getNextFerryFromQueue() {
+        return ferryQueue.poll();
+    }
+
+    public double[] getQueuePosition(int queueIndex, double tileSize) {
+        double posX = ferryQueueCoordinateX * tileSize;
+        double posY = (ferryQueueCoordinateY + queueIndex) * tileSize; // Adjust position in the queue
+        return new double[] { posX, posY };
+    }
+
+    public void signalNextFerry() {
+        dockLock.lock();
+        try {
+            dockAvailableCondition.signal();
+        } finally {
+            dockLock.unlock();
+        }
+    }
+
+    public Ferry peekNextFerryInQueue() {
+        dockLock.lock();
+        try {
+            return ferryQueue.peek();
+        } finally {
+            dockLock.unlock();
+        }
+    }
+
+    public Lock getDockLock() {
+        return dockLock;
+    }
+
+    public Condition getDockAvailableCondition() {
+        return dockAvailableCondition;
     }
 
     public boolean isFerryAtDock() {
