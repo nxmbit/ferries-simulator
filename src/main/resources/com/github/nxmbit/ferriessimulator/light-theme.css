@@ -1,0 +1,80 @@
+/* light-theme.css */
+
+.root {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.button {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #000000;
+}
+
+.button:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+.label {
+    -fx-text-fill: #000000;
+}
+
+.menu-bar {
+    -fx-background-color: #f0f0f0;
+}
+
+.menu {
+    -fx-background-color: #f0f0f0;
+}
+
+.menu-item {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+}
+
+.menu-item:focused, .menu-item:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #000000;
+}
+
+.titled-pane > .content {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.scroll-pane {
+    -fx-background: #ffffff;
+}
+
+.scroll-pane .viewport {
+    -fx-background: #ffffff;
+}
+
+.vbox, .hbox {
+    -fx-background-color: #ffffff;
+}
+
+.pane {
+    -fx-background-color: #ffffff;
+}
+
+.slider {
+    -fx-background-color: #ffffff;
+}
+
+.spinner {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.toggle-button {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #000000;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #c0c0c0;
+}

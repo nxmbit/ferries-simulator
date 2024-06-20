@@ -1,11 +1,9 @@
 package com.github.nxmbit.ferriessimulator;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -15,9 +13,9 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("simulation.fxml"));
         Parent root = loader.load();
 
-        primaryStage.setTitle("Symulacja Promów na Rzece");
+        primaryStage.setTitle("Ferries Simulation");
         primaryStage.setScene(new Scene(root));
-        //primaryStage.setScene(new Scene(root, 1920, 1080));
+
         primaryStage.setResizable(false); // Make the window non-resizable
 
         primaryStage.setOnCloseRequest(e -> {
@@ -29,7 +27,6 @@ public class Main extends Application {
 
         primaryStage.show();
 
-        Controller controller = loader.getController();
     }
 
     public static void main(String[] args) {

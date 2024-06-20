@@ -3,8 +3,10 @@
   "vehiclesSpawnInterval": 3000,
   "minRandomFerryCapacity": 2,
   "maxRandomFerryCapacity": 10,
-  "ferrySpeed": 8.0
-
-
-
+  "minRandomFerryLoadingTime": 3000,
+  "maxRandomFerryLoadingTime": 8000,
+  "ferrySpeed": 8.0,
+  "minRandomVehicleSpeed": 4.0,
+  "maxRandomVehicleSpeed": 8.0,
+  "leftRightDockSpawnBalance": 0.5
 }

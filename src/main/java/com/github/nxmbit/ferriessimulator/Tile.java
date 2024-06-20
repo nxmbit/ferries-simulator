@@ -13,7 +13,6 @@ public class Tile extends Rectangle {
     private int gridX;
     private int gridY;
     private boolean strokeVisibility;
-    Color vehicleCustomColor;
 
     public Tile(double paneX, double paneY, double width, double height, TileType type, int gridX, int gridY) {
         super(paneX, paneY, width, height);

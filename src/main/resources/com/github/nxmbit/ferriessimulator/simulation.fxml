@@ -8,9 +8,25 @@
     <children>
         <MenuBar>
             <menus>
-                <Menu text="File">
+                <Menu text="Simulation">
                     <items>
-                        <MenuItem text="About" />
+                        <MenuItem fx:id="menuStart" text="Start" onAction="#startSimulation" />
+                        <MenuItem fx:id="menuStop" text="Stop" onAction="#stopSimulation" />
+                        <MenuItem text="About" onAction="#showAbout"/>
+                    </items>
+                </Menu>
+                <Menu text="Theme">
+                    <items>
+                        <RadioMenuItem text="Light Theme" onAction="#setLightTheme">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="themeToggleGroup" />
+                            </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem text="Dark Theme" onAction="#setDarkTheme">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="themeToggleGroup" />
+                            </toggleGroup>
+                        </RadioMenuItem>
                     </items>
                 </Menu>
             </menus>
@@ -27,6 +43,7 @@
                                             <content>
                                                 <VBox>
                                                     <Button fx:id="startButton" onAction="#startSimulation" text="Start Simulation" />
+                                                    <Region minHeight="5" />
                                                     <Button fx:id="stopButton" onAction="#stopSimulation" text="Stop Simulation" />
                                                 </VBox>
                                             </content>
@@ -36,12 +53,57 @@
                                                 <VBox>
                                                     <Label text="Spawn Interval (seconds):" />
                                                     <Slider fx:id="spawnIntervalSlider" max="10" min="1" value="5" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Region minHeight="15" />
                                                     <Label text="Max Vehicles:" />
                                                     <Spinner fx:id="maxVehiclesSpinner" promptText="Enter max vehicles" />
+                                                    <Region minHeight="15" />
                                                     <Label text="Left-Right Dock Spawn Probability:" />
                                                     <Slider fx:id="dockSpawnProbabilitySlider" max="100" min="0" value="50" majorTickUnit="10" blockIncrement="10" snapToTicks="true" />
                                                     <Label fx:id="leftDockProbabilityLabel" text="Left Dock Probability: 50%" />
                                                     <Label fx:id="rightDockProbabilityLabel" text="Right Dock Probability: 50%" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Min Vehicle Speed:" />
+                                                    <Slider fx:id="minVehicleSpeedSlider" max="12" min="2" value="4" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="minVehicleSpeedLabel" text="Min Speed: 4.0" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Max Vehicle Speed:" />
+                                                    <Slider fx:id="maxVehicleSpeedSlider" max="12" min="2" value="8" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="maxVehicleSpeedLabel" text="Max Speed: 8.0" />
+                                                    <Region minHeight="15" />
+                                                    <Button fx:id="spawnLeftButton" onAction="#spawnLeftVehicle" text="Spawn Vehicle - Left" />
+                                                    <Region minHeight="5" />
+                                                    <Button fx:id="spawnRightButton" onAction="#spawnRightVehicle" text="Spawn Vehicle - Right" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane text="Left dock">
+                                            <content>
+                                                <VBox>
+                                                    <Label text="Ferry entry queue size:" />
+                                                    <Spinner fx:id="dock1EntryQueueSpinner" promptText="Enter max vehicles" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Ferry exit queue size:" />
+                                                    <Spinner fx:id="dock1ExitQueueSpinner" promptText="Enter max vehicles" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane text="Right dock">
+                                            <content>
+                                                <VBox>
+                                                    <Label text="Ferry entry queue size:" />
+                                                    <Spinner fx:id="dock2EntryQueueSpinner" promptText="Enter max vehicles" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Ferry exit queue size:" />
+                                                    <Spinner fx:id="dock2ExitQueueSpinner" promptText="Enter max vehicles" />
+                                                </VBox>
+                                            </content>
+                                        </TitledPane>
+                                        <TitledPane text="Ferries">
+                                            <content>
+                                                <VBox>
+                                                    <Label text="Ferry Speed:" />
+                                                    <Slider fx:id="ferrySpeedSlider" max="10" min="1" value="8" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="ferrySpeedLabel" text="Speed: 8.0" />
                                                 </VBox>
                                             </content>
                                         </TitledPane>
@@ -67,37 +129,6 @@
         </HBox>
     </children>
 </VBox>
-
-
-        <!--<?xml version="1.0" encoding="UTF-8"?>-->
-
-<!--<?import javafx.geometry.*?>-->
-<!--<?import javafx.scene.control.*?>-->
-<!--<?import javafx.scene.layout.*?>-->
-
-<!--<HBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.github.nxmbit.ferriessimulator.Controller">-->
-<!--    <children>-->
-<!--        <VBox minWidth="200" prefHeight="936.0" prefWidth="256.0">-->
-<!--            <children>-->
-<!--                <Button fx:id="startButton" onAction="#startSimulation" text="Start Simulation" />-->
-<!--                <Button fx:id="stopButton" onAction="#stopSimulation" text="Stop Simulation" />-->
-<!--                <Label text="Spawn Interval:" />-->
-<!--                <Slider fx:id="spawnIntervalSlider" max="10000" min="1000" value="5000" />-->
-<!--                <Button fx:id="setIntervalButton" onAction="#adjustSpawnInterval" text="Set Interval" />-->
-<!--                <Label text="Max Vehicles:" />-->
-<!--                <TextField fx:id="maxVehiclesField" promptText="Enter max vehicles" />-->
-<!--                <Button fx:id="setMaxVehiclesButton" onAction="#setMaxVehicles" text="Set Max Vehicles" />-->
-<!--                <Button fx:id="spawnVehicleButton" onAction="#spawnVehicle" text="Spawn Vehicle" />-->
-<!--                <ToggleButton fx:id="toggleGridButton" onAction="#toggleGridVisibility" text="Toggle Grid" />-->
-<!--            </children>-->
-<!--            <VBox.margin>-->
-<!--                <Insets bottom="0" left="0" right="20" top="0" />-->
-<!--            </VBox.margin>-->
-<!--        </VBox>-->
-<!--        <Separator orientation="VERTICAL" />-->
-<!--        <Pane fx:id="pane" minHeight="936" minWidth="1664" />-->
-<!--    </children>-->
-<!--</HBox>-->
 
 
 

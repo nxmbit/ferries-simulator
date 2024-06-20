@@ -13,7 +13,6 @@ public class Vehicle implements Runnable {
     private int prevY;
     private Tile[][] grid;
     private TileType[][] originalTileTypes;
-    private boolean wasWaiting;
     private final Color color;
     private VehicleState state;
     private VehicleState previousState;
@@ -23,11 +22,9 @@ public class Vehicle implements Runnable {
 
     private boolean running;
 
-    private Tile spawnPoint;
     private Tile despawnPoint;
 
     public Vehicle(double speed, Color color, Dock dock, Tile[][] grid, Tile spawn, Tile despawn, TileType[][] originalTileTypes) {
-        this.spawnPoint = spawn;
         this.despawnPoint = despawn;
         this.speed = this.maxSpeed = speed;
         this.color = color;
@@ -38,14 +35,12 @@ public class Vehicle implements Runnable {
         this.originalTileTypes = originalTileTypes;
         grid[x][y].setType(TileType.VEHICLE);
         grid[x][y].setFill(color);
-        this.wasWaiting = false;
         this.state = VehicleState.GOING_STRAIGHT_UP;
         this.travelState = VehicleState.TRAVELLING_TO_DOCK;
         this.running = true;
         this.threadSleepBasedOnSpeed = (long) (1000 / speed);
         this.dockChanged = false;
 
-        //System.out.println("Vehicle spawned at (" + x + ", " + y + ") with speed " + speed + " and color " + color);
     }
 
     public int getX() {

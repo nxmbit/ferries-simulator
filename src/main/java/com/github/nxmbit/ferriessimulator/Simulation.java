@@ -14,6 +14,7 @@ public class Simulation implements Runnable {
     private int maxCarsCount;
 
     private MapImport mapImport;
+    private final SettingsImport settings;
 
     private Dock leftDock;
     private Dock rightDock;
@@ -32,6 +33,7 @@ public class Simulation implements Runnable {
         this.docks = new HashMap<>();
         this.maxCarsCount = 5;
         this.mapImport = new MapImport();
+        this.settings = new SettingsImport();
         this.simulationRunning = true;
     }
 
@@ -60,17 +62,18 @@ public class Simulation implements Runnable {
         return despawnPoints;
     }
 
-    public void setup(int ferryCount, int dockHeight, double tileSize, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes) {
+    public void setup(int ferryCount, int dockHeight, double tileSize, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes,
+                      int dock1EnteringCapacity, int dock1ExitingCapacity, int dock2EnteringCapacity, int dock2ExitingCapacity) {
         setSpawnAndDespawnPoints(grid);
 
-        leftDock = new Dock(mapImport.getDock1EnteringCapacity(), mapImport.getDock1ExitingCapacity(),
+        leftDock = new Dock(dock1EnteringCapacity, dock1ExitingCapacity,
                 mapImport.getDock1FerryCoordinateX(), mapImport.getDock1FerryCoordinateY(),
                 mapImport.getDock1CriticalSectionCoordinateX(), mapImport.getDock1CriticalSectionCoordinateY(),
                 mapImport.getDock1CriticalSectionReturnCoordinateX(), mapImport.getDock1CriticalSectionReturnCoordinateY(),
                 mapImport.getDock1FerryQueueSize(), mapImport.getDock1FerryQueueCoordinateX(), mapImport.getDock1FerryQueueCoordinateY(),
                 mapImport.getDock1ToDock2LaneCoordinateX(), mapImport.getDock1ToDock2LaneCoordinateY(),
                 mapImport.getDock1ToDock2LaneCoordinateXEnd(), mapImport.getDock1ToDock2LaneCoordinateYEnd(), mapImport.getDock1ToDock2GoDownToQueueCoordinateX());
-        rightDock = new Dock(mapImport.getDock2EnteringCapacity(), mapImport.getDock2ExitingCapacity(),
+        rightDock = new Dock(dock2EnteringCapacity, dock2ExitingCapacity,
                 mapImport.getDock2FerryCoordinateX(), mapImport.getDock2FerryCoordinateY(),
                 mapImport.getDock2CriticalSectionCoordinateX(), mapImport.getDock2CriticalSectionCoordinateY(),
                 mapImport.getDock2CriticalSectionReturnCoordinateX(), mapImport.getDock2CriticalSectionReturnCoordinateY(),
@@ -89,7 +92,7 @@ public class Simulation implements Runnable {
             int capacity = 2 + new Random().nextInt(5) * 2; // Random capacity between 2 and 10
             Ferry ferry = new Ferry(8.0, capacity, leftDock, rightDock, maxLoadingTime, tileSize, dockHeight);
             leftDock.addFerryToQueueOnSpawn(ferry);
-            ferry.setQueuePosition(i); //?????
+            ferry.setQueuePosition(i);
             ferries.add(ferry);
         }
 
@@ -101,7 +104,9 @@ public class Simulation implements Runnable {
             ferries.add(ferry);
         }
 
-        vehicleSpawner = new VehicleSpawner(docks, grid, maxCarsCount, spawnPoints, despawnPoints, originalTileTypes, 5000, vehicles);
+        vehicleSpawner = new VehicleSpawner(docks, grid, settings.getMaxVehicles(), spawnPoints, despawnPoints, originalTileTypes,
+                settings.getVehiclesSpawnInterval(), vehicles, settings.getLeftRightDockSpawnBalance(),
+                settings.getMinRandomVehicleSpeed(), settings.getMaxRandomVehicleSpeed());
     }
 
     public List<Ferry> getFerries() {

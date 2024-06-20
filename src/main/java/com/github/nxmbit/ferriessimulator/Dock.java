@@ -8,8 +8,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Dock {
-    private final Semaphore enteringSemaphore;
-    private final Semaphore exitingSemaphore;
+    private  Semaphore enteringSemaphore;
+    private  Semaphore exitingSemaphore;
     private final Lock criticalSectionLock;
     private final Lock dockLock;
     private final Condition criticalSectionCondition;
