@@ -92,7 +92,8 @@ public class Simulation implements Runnable {
 
         for (int i = 0; i < dock1FerriesSpawned && totalFerries < maxFerries; i++, totalFerries++) {
             int capacity = minFerryCapacity + new Random().nextInt(maxFerryCapacity);
-            Ferry ferry = new Ferry(ferrySpeed, capacity, leftDock, rightDock, maxLoadingTime, tileSize, dockHeight);
+            int loadingTime = (minLoadingTime + new Random().nextInt(maxLoadingTime)) * 1000;
+            Ferry ferry = new Ferry(ferrySpeed, capacity, leftDock, rightDock, loadingTime, tileSize, dockHeight);
             leftDock.addFerryToQueueOnSpawn(ferry);
             ferry.setQueuePosition(i);
             ferries.add(ferry);
@@ -100,7 +101,8 @@ public class Simulation implements Runnable {
 
         for (int i = 0; i < dock2FerriesSpawned && totalFerries < maxFerries; i++, totalFerries++) {
             int capacity = minFerryCapacity + new Random().nextInt(maxFerryCapacity);
-            Ferry ferry = new Ferry(ferrySpeed, capacity, rightDock, leftDock, maxLoadingTime, tileSize, dockHeight);
+            int loadingTime = (minLoadingTime + new Random().nextInt(maxLoadingTime)) * 1000;
+            Ferry ferry = new Ferry(ferrySpeed, capacity, rightDock, leftDock, loadingTime, tileSize, dockHeight);
             rightDock.addFerryToQueueOnSpawn(ferry);
             ferry.setQueuePosition(i);
             ferries.add(ferry);

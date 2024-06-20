@@ -479,17 +479,19 @@ public class Controller implements Initializable {
         minFerryLoadingTimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.doubleValue() > maxFerryLoadingTimeSlider.getValue()) {
                 minFerryLoadingTimeSlider.setValue(maxFerryLoadingTimeSlider.getValue());
+            } else {
+                minFerryLoadingTimeLabel.setText("Min Loading Time: " + newValue.intValue() + " s");
+                minFerryLoadingTime = newValue.intValue();
             }
-            minFerryLoadingTimeLabel.setText("Min Loading Time: " + newValue.intValue() + " s");
-            minFerryLoadingTime = newValue.intValue() * 1000;
         });
 
         maxFerryLoadingTimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.doubleValue() < minFerryLoadingTimeSlider.getValue()) {
                 maxFerryLoadingTimeSlider.setValue(minFerryLoadingTimeSlider.getValue());
+            } else {
+                maxFerryLoadingTimeLabel.setText("Max Loading Time: " + newValue.intValue() + " s");
+                maxFerryLoadingTime = newValue.intValue();
             }
-            maxFerryLoadingTimeLabel.setText("Max Loading Time: " + newValue.intValue() + " s");
-            maxFerryLoadingTime = newValue.intValue() * 1000;
         });
 
         minFerryLoadingTimeSlider.setValue(settings.getMinRandomFerryLoadingTime() / 1000.0);
@@ -526,17 +528,19 @@ public class Controller implements Initializable {
         minFerryCapacitySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.doubleValue() > maxFerryCapacitySlider.getValue()) {
                 minFerryCapacitySlider.setValue(maxFerryCapacitySlider.getValue());
+            } else {
+                minFerryCapacityLabel.setText("Min Ferry Capacity: " + newValue.intValue());
+                minFerryCapacity = newValue.intValue();
             }
-            minFerryCapacityLabel.setText("Min Ferry Capacity: " + newValue.intValue());
-            minFerryCapacity = newValue.intValue();
         });
 
         maxFerryCapacitySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.doubleValue() < minFerryCapacitySlider.getValue()) {
                 maxFerryCapacitySlider.setValue(minFerryCapacitySlider.getValue());
+            } else {
+                maxFerryCapacityLabel.setText("Max Ferry Capacity: " + newValue.intValue());
+                maxFerryCapacity = newValue.intValue();
             }
-            maxFerryCapacityLabel.setText("Max Ferry Capacity: " + newValue.intValue());
-            maxFerryCapacity = newValue.intValue();
         });
 
         minFerryCapacitySlider.setValue(settings.getMinRandomFerryCapacity());

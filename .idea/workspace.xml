@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Major GUI overhaul 1/2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="cea58b72-6005-4fed-90a5-0ba8dba8bec2" name="Changes" comment="Major GUI overhaul 2/2">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/SettingsImport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/SettingsImport.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/nxmbit/ferriessimulator/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/github/nxmbit/ferriessimulator/simulation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +146,7 @@
       <workItem from="1718830609190" duration="2000" />
       <workItem from="1718834935109" duration="8790000" />
       <workItem from="1718871103546" duration="17082000" />
-      <workItem from="1718896875578" duration="18023000" />
+      <workItem from="1718896875578" duration="18509000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -255,7 +252,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718910478140</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Major GUI overhaul 2/2">
+      <option name="closed" value="true" />
+      <created>1718917878050</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1718917878050</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -286,6 +291,7 @@
     <MESSAGE value="Some UI changes" />
     <MESSAGE value="Working ferry queue" />
     <MESSAGE value="Major GUI overhaul 1/2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Major GUI overhaul 1/2" />
+    <MESSAGE value="Major GUI overhaul 2/2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Major GUI overhaul 2/2" />
   </component>
 </project>
