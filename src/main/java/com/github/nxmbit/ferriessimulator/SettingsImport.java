@@ -10,8 +10,8 @@ public class SettingsImport {
     private long vehiclesSpawnInterval;
     private int minRandomFerryCapacity;
     private int maxRandomFerryCapacity;
-    private long minRandomFerryLoadingTime;
-    private long maxRandomFerryLoadingTime;
+    private int minRandomFerryLoadingTime;
+    private int maxRandomFerryLoadingTime;
     private double ferrySpeed;
     private double minRandomVehicleSpeed;
     private double maxRandomVehicleSpeed;
@@ -27,8 +27,8 @@ public class SettingsImport {
             this.vehiclesSpawnInterval = obj.getLong("vehiclesSpawnInterval");
             this.minRandomFerryCapacity = obj.getInt("minRandomFerryCapacity");
             this.maxRandomFerryCapacity = obj.getInt("maxRandomFerryCapacity");
-            this.minRandomFerryLoadingTime = obj.getLong("minRandomFerryLoadingTime");
-            this.maxRandomFerryLoadingTime = obj.getLong("maxRandomFerryLoadingTime");
+            this.minRandomFerryLoadingTime = obj.getInt("minRandomFerryLoadingTime");
+            this.maxRandomFerryLoadingTime = obj.getInt("maxRandomFerryLoadingTime");
             this.ferrySpeed = obj.getDouble("ferrySpeed");
             this.minRandomVehicleSpeed = obj.getDouble("minRandomVehicleSpeed");
             this.maxRandomVehicleSpeed = obj.getDouble("maxRandomVehicleSpeed");
@@ -56,11 +56,11 @@ public class SettingsImport {
         return maxRandomFerryCapacity;
     }
 
-    public long getMinRandomFerryLoadingTime() {
+    public int getMinRandomFerryLoadingTime() {
         return minRandomFerryLoadingTime;
     }
 
-    public long getMaxRandomFerryLoadingTime() {
+    public int getMaxRandomFerryLoadingTime() {
         return maxRandomFerryLoadingTime;
     }
 

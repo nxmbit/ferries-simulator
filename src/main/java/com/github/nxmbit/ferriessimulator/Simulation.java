@@ -62,8 +62,10 @@ public class Simulation implements Runnable {
         return despawnPoints;
     }
 
-    public void setup(int ferryCount, int dockHeight, double tileSize, int maxLoadingTime, Tile[][] grid, TileType[][] originalTileTypes,
-                      int dock1EnteringCapacity, int dock1ExitingCapacity, int dock2EnteringCapacity, int dock2ExitingCapacity) {
+    public void setup(int dockHeight, double tileSize, Tile[][] grid, TileType[][] originalTileTypes,
+                      int dock1EnteringCapacity, int dock1ExitingCapacity, int dock2EnteringCapacity, int dock2ExitingCapacity,
+                      double ferrySpeed, int dock1FerriesSpawned, int dock2FerriesSpawned, int minLoadingTime, int maxLoadingTime,
+                      int minFerryCapacity, int maxFerryCapacity) {
         setSpawnAndDespawnPoints(grid);
 
         leftDock = new Dock(dock1EnteringCapacity, dock1ExitingCapacity,
@@ -88,17 +90,17 @@ public class Simulation implements Runnable {
         int totalFerries = 0;
         int maxFerries = mapImport.getMaxNumberOfFerries();
 
-        for (int i = 0; i < mapImport.getDock1FerryQueueSize() && totalFerries < maxFerries; i++, totalFerries++) {
-            int capacity = 2 + new Random().nextInt(5) * 2; // Random capacity between 2 and 10
-            Ferry ferry = new Ferry(8.0, capacity, leftDock, rightDock, maxLoadingTime, tileSize, dockHeight);
+        for (int i = 0; i < dock1FerriesSpawned && totalFerries < maxFerries; i++, totalFerries++) {
+            int capacity = minFerryCapacity + new Random().nextInt(maxFerryCapacity);
+            Ferry ferry = new Ferry(ferrySpeed, capacity, leftDock, rightDock, maxLoadingTime, tileSize, dockHeight);
             leftDock.addFerryToQueueOnSpawn(ferry);
             ferry.setQueuePosition(i);
             ferries.add(ferry);
         }
 
-        for (int i = 0; i < mapImport.getDock2FerryQueueSize() && totalFerries < maxFerries; i++, totalFerries++) {
-            int capacity = 2 + new Random().nextInt(5) * 2; // Random capacity between 2 and 10
-            Ferry ferry = new Ferry(8.0, capacity, rightDock, leftDock, maxLoadingTime, tileSize, dockHeight);
+        for (int i = 0; i < dock2FerriesSpawned && totalFerries < maxFerries; i++, totalFerries++) {
+            int capacity = minFerryCapacity + new Random().nextInt(maxFerryCapacity);
+            Ferry ferry = new Ferry(ferrySpeed, capacity, rightDock, leftDock, maxLoadingTime, tileSize, dockHeight);
             rightDock.addFerryToQueueOnSpawn(ferry);
             ferry.setQueuePosition(i);
             ferries.add(ferry);

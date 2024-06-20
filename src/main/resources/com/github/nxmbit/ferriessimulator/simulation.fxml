@@ -102,8 +102,34 @@
                                             <content>
                                                 <VBox>
                                                     <Label text="Ferry Speed:" />
-                                                    <Slider fx:id="ferrySpeedSlider" max="10" min="1" value="8" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
-                                                    <Label fx:id="ferrySpeedLabel" text="Speed: 8.0" />
+                                                    <Slider fx:id="ferrySpeedSlider" max="10" min="1" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="ferrySpeedLabel" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Min Ferry Capacity:" />
+                                                    <Slider fx:id="minFerryCapacitySlider" max="10" min="1" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="minFerryCapacityLabel" text="Min Ferry Capacity: 2" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Max Ferry Capacity:" />
+                                                    <Slider fx:id="maxFerryCapacitySlider" max="10" min="1" majorTickUnit="1" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="maxFerryCapacityLabel" text="Max Ferry Capacity: 10" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Min Ferry Loading Time (seconds):" />
+                                                    <Slider fx:id="minFerryLoadingTimeSlider" max="30" min="1" majorTickUnit="5" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="minFerryLoadingTimeLabel" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Max Ferry Loading Time (seconds):" />
+                                                    <Slider fx:id="maxFerryLoadingTimeSlider" max="30" min="1" majorTickUnit="5" blockIncrement="1" snapToTicks="true" />
+                                                    <Label fx:id="maxFerryLoadingTimeLabel" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Number of Ferries spawned" />
+                                                    <Label text="in left dock queue:" />
+                                                    <Spinner fx:id="leftFerriesSpinner" promptText="Enter number of ferries on left" />
+                                                    <Label fx:id="leftFerriesLabel" wrapText="true" />
+                                                    <Region minHeight="15" />
+                                                    <Label text="Number of Ferries spawned" />
+                                                    <Label text="in right dock queue:" />
+                                                    <Spinner fx:id="rightFerriesSpinner" promptText="Enter number of ferries on right" />
+                                                    <Label fx:id="rightFerriesLabel" wrapText="true" />
                                                 </VBox>
                                             </content>
                                         </TitledPane>

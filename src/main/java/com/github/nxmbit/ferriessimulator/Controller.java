@@ -65,6 +65,35 @@ public class Controller implements Initializable {
     private Spinner<Integer> dock2EntryQueueSpinner;
     @FXML
     private Spinner<Integer> dock2ExitQueueSpinner;
+    @FXML
+    private Slider ferrySpeedSlider;
+    @FXML
+    private Label ferrySpeedLabel;
+    @FXML
+    private Slider minFerryLoadingTimeSlider;
+    @FXML
+    private Label minFerryLoadingTimeLabel;
+    @FXML
+    private Slider maxFerryLoadingTimeSlider;
+    @FXML
+    private Label maxFerryLoadingTimeLabel;
+    @FXML
+    private Spinner<Integer> leftFerriesSpinner;
+    @FXML
+    private Label leftFerriesLabel;
+    @FXML
+    private Spinner<Integer> rightFerriesSpinner;
+    @FXML
+    private Label rightFerriesLabel;
+    @FXML
+    private Slider minFerryCapacitySlider;
+    @FXML
+    private Label minFerryCapacityLabel;
+    @FXML
+    private Slider maxFerryCapacitySlider;
+    @FXML
+    private Label maxFerryCapacityLabel;
+
 
     private Tile[][] grid;
     private TileType[][] OriginalTileTypes;
@@ -79,6 +108,16 @@ public class Controller implements Initializable {
     private int dock2EnteringCapacity = mapImport.getDock2EnteringCapacity();
     private int dock2ExitingCapacity = mapImport.getDock2ExitingCapacity();
 
+    private int minFerryCapacity = settings.getMinRandomFerryCapacity();
+    private int maxFerryCapacity = settings.getMaxRandomFerryCapacity();
+    private int minFerryLoadingTime = settings.getMinRandomFerryLoadingTime();
+    private int maxFerryLoadingTime = settings.getMaxRandomFerryLoadingTime();
+    private int leftFerries = mapImport.getDock1FerryQueueSize();
+    private int rightFerries = mapImport.getDock2FerryQueueSize();
+    private double ferrySpeed = settings.getFerrySpeed();
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         pane.widthProperty().addListener((obs, oldVal, newVal) -> setupIfReady());
@@ -88,8 +127,9 @@ public class Controller implements Initializable {
         setupDockSpawnProbabilitySlider();
         setupMinVehicleSpeedSlider();
         setupMaxVehicleSpeedSlider();
-        setupControlsFromSettings();
         setupQueueSpinners();
+        setupFerrySettings();
+        setupControlsFromSettings();
     }
 
     private void setupIfReady() {
@@ -164,18 +204,41 @@ public class Controller implements Initializable {
         spawnIntervalSlider.setValue(settings.getVehiclesSpawnInterval() / 1000.0);
         maxVehiclesSpinner.getValueFactory().setValue(settings.getMaxVehicles());
         dockSpawnProbabilitySlider.setValue(settings.getLeftRightDockSpawnBalance() * 100);
-        //ferrySpeedSlider.setValue(settings.getFerrySpeed());
+
         minVehicleSpeedSlider.setValue(settings.getMinRandomVehicleSpeed());
         maxVehicleSpeedSlider.setValue(settings.getMaxRandomVehicleSpeed());
 
         leftDockProbabilityLabel.setText(String.format("Left Dock Probability: %.0f%%", settings.getLeftRightDockSpawnBalance() * 100));
         rightDockProbabilityLabel.setText(String.format("Right Dock Probability: %.0f%%", (1 - settings.getLeftRightDockSpawnBalance()) * 100));
 
-        //ferrySpeedLabel.setText("Speed: " + settings.getFerrySpeed());
-        //minVehicleSpeedLabel.setText("Min Speed: " + settings.getMinRandomVehicleSpeed());
-        //maxVehicleSpeedLabel.setText("Max Speed: " + settings.getMaxRandomVehicleSpeed());
-    }
+        minVehicleSpeedLabel.setText("Min Speed: " + settings.getMinRandomVehicleSpeed());
+        maxVehicleSpeedLabel.setText("Max Speed: " + settings.getMaxRandomVehicleSpeed());
 
+        minFerryLoadingTimeSlider.setValue(settings.getMinRandomFerryLoadingTime() / 1000.0);
+        maxFerryLoadingTimeSlider.setValue(settings.getMaxRandomFerryLoadingTime() / 1000.0);
+
+        minFerryLoadingTimeLabel.setText("Min Loading Time: " + settings.getMinRandomFerryLoadingTime() / 1000 + " s");
+        maxFerryLoadingTimeLabel.setText("Max Loading Time: " + settings.getMaxRandomFerryLoadingTime() / 1000 + " s");
+
+        ferrySpeedSlider.setValue(settings.getFerrySpeed());
+
+        leftFerriesLabel.setText("Number of Ferries on Left: " + mapImport.getDock1FerryQueueSize());
+        rightFerriesLabel.setText("Number of Ferries on Right: " + mapImport.getDock2FerryQueueSize());
+        leftFerriesSpinner.getValueFactory().setValue(mapImport.getDock1FerryQueueSize());
+        rightFerriesSpinner.getValueFactory().setValue(mapImport.getDock2FerryQueueSize());
+
+        minFerryCapacitySlider.setValue(settings.getMinRandomFerryCapacity());
+        maxFerryCapacitySlider.setValue(settings.getMaxRandomFerryCapacity());
+
+        minFerryCapacityLabel.setText("Min Ferry Capacity: " + settings.getMinRandomFerryCapacity());
+        maxFerryCapacityLabel.setText("Max Ferry Capacity: " + settings.getMaxRandomFerryCapacity());
+
+        dock1EntryQueueSpinner.getValueFactory().setValue(mapImport.getDock1EnteringCapacity());
+        dock1ExitQueueSpinner.getValueFactory().setValue(mapImport.getDock1ExitingCapacity());
+        dock2EntryQueueSpinner.getValueFactory().setValue(mapImport.getDock2EnteringCapacity());
+        dock2ExitQueueSpinner.getValueFactory().setValue(mapImport.getDock2ExitingCapacity());
+
+    }
 
     private void setupMaxVehiclesSpinner() {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 5);
@@ -191,7 +254,9 @@ public class Controller implements Initializable {
     public void setupSimulation() {
         simulation = new Simulation();
         System.out.println("tileSize: " + tileSize);
-        simulation.setup(2, dockHeight, tileSize, 8000, grid, OriginalTileTypes, dock1EnteringCapacity, dock1ExitingCapacity, dock2EnteringCapacity, dock2ExitingCapacity);
+        simulation.setup(dockHeight, tileSize, grid, OriginalTileTypes, dock1EnteringCapacity, dock1ExitingCapacity,
+                dock2EnteringCapacity, dock2ExitingCapacity, ferrySpeed, leftFerries, rightFerries, minFerryLoadingTime,
+                maxFerryLoadingTime, minFerryCapacity, maxFerryCapacity);
         timeline = new Timeline(new KeyFrame(Duration.millis(90), e -> draw()));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -216,6 +281,7 @@ public class Controller implements Initializable {
             simulation.stop();
             clearSimulation();
             simulationRunning = false;
+            setupControlsFromSettings();
             updateUIState();
         }
     }
@@ -225,14 +291,6 @@ public class Controller implements Initializable {
         createGrid();
         draw();
     }
-
-    public void adjustSpawnInterval() {
-        if (simulationRunning) {
-            long interval = (long) spawnIntervalSlider.getValue();
-            simulation.getVehicleSpawner().setSpawnInterval(interval);
-        }
-    }
-
 
     private void updateUIState() {
         startButton.setDisable(simulationRunning);
@@ -252,6 +310,14 @@ public class Controller implements Initializable {
         dock1ExitQueueSpinner.setDisable(simulationRunning);
         dock2EntryQueueSpinner.setDisable(simulationRunning);
         dock2ExitQueueSpinner.setDisable(simulationRunning);
+
+        ferrySpeedSlider.setDisable(simulationRunning);
+        minFerryLoadingTimeSlider.setDisable(simulationRunning);
+        maxFerryLoadingTimeSlider.setDisable(simulationRunning);
+        leftFerriesSpinner.setDisable(simulationRunning);
+        rightFerriesSpinner.setDisable(simulationRunning);
+        minFerryCapacitySlider.setDisable(simulationRunning);
+        maxFerryCapacitySlider.setDisable(simulationRunning);
     }
 
     public void toggleGridVisibility() {
@@ -382,6 +448,101 @@ public class Controller implements Initializable {
         dock2ExitQueueSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             dock2ExitingCapacity = newValue;
         });
+    }
+
+    private void setupFerrySettings() {
+        ferrySpeedSlider.setMajorTickUnit(1);
+        ferrySpeedSlider.setMinorTickCount(0);
+        ferrySpeedSlider.setSnapToTicks(true);
+        ferrySpeedSlider.setShowTickLabels(true);
+        ferrySpeedSlider.setShowTickMarks(true);
+
+        ferrySpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            ferrySpeedLabel.setText("Speed: " + newValue.toString());
+            ferrySpeed = newValue.doubleValue();
+        });
+
+        ferrySpeedSlider.setValue(settings.getFerrySpeed());
+
+        minFerryLoadingTimeSlider.setMajorTickUnit(1);
+        minFerryLoadingTimeSlider.setMinorTickCount(0);
+        minFerryLoadingTimeSlider.setSnapToTicks(true);
+        minFerryLoadingTimeSlider.setShowTickLabels(false);
+        minFerryLoadingTimeSlider.setShowTickMarks(true);
+
+        maxFerryLoadingTimeSlider.setMajorTickUnit(1);
+        maxFerryLoadingTimeSlider.setMinorTickCount(0);
+        maxFerryLoadingTimeSlider.setSnapToTicks(true);
+        maxFerryLoadingTimeSlider.setShowTickLabels(false);
+        maxFerryLoadingTimeSlider.setShowTickMarks(true);
+
+        minFerryLoadingTimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() > maxFerryLoadingTimeSlider.getValue()) {
+                minFerryLoadingTimeSlider.setValue(maxFerryLoadingTimeSlider.getValue());
+            }
+            minFerryLoadingTimeLabel.setText("Min Loading Time: " + newValue.intValue() + " s");
+            minFerryLoadingTime = newValue.intValue() * 1000;
+        });
+
+        maxFerryLoadingTimeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() < minFerryLoadingTimeSlider.getValue()) {
+                maxFerryLoadingTimeSlider.setValue(minFerryLoadingTimeSlider.getValue());
+            }
+            maxFerryLoadingTimeLabel.setText("Max Loading Time: " + newValue.intValue() + " s");
+            maxFerryLoadingTime = newValue.intValue() * 1000;
+        });
+
+        minFerryLoadingTimeSlider.setValue(settings.getMinRandomFerryLoadingTime() / 1000.0);
+        maxFerryLoadingTimeSlider.setValue(settings.getMaxRandomFerryLoadingTime() / 1000.0);
+
+        SpinnerValueFactory<Integer> leftFerriesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, mapImport.getDock1FerryQueueSize(), mapImport.getDock1FerryQueueSize());
+        leftFerriesSpinner.setValueFactory(leftFerriesFactory);
+
+        SpinnerValueFactory<Integer> rightFerriesFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, mapImport.getDock2FerryQueueSize(), mapImport.getDock2FerryQueueSize());
+        rightFerriesSpinner.setValueFactory(rightFerriesFactory);
+
+        leftFerriesSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            leftFerriesLabel.setText("Number of Ferries on Left: " + newValue.intValue());
+            leftFerries = newValue.intValue();
+        });
+
+        rightFerriesSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            rightFerriesLabel.setText("Number of Ferries on Right: " + newValue.intValue());
+            rightFerries = newValue.intValue();
+        });
+
+        minFerryCapacitySlider.setMajorTickUnit(1);
+        minFerryCapacitySlider.setMinorTickCount(0);
+        minFerryCapacitySlider.setSnapToTicks(true);
+        minFerryCapacitySlider.setShowTickLabels(true);
+        minFerryCapacitySlider.setShowTickMarks(true);
+
+        maxFerryCapacitySlider.setMajorTickUnit(1);
+        maxFerryCapacitySlider.setMinorTickCount(0);
+        maxFerryCapacitySlider.setSnapToTicks(true);
+        maxFerryCapacitySlider.setShowTickLabels(true);
+        maxFerryCapacitySlider.setShowTickMarks(true);
+
+        minFerryCapacitySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() > maxFerryCapacitySlider.getValue()) {
+                minFerryCapacitySlider.setValue(maxFerryCapacitySlider.getValue());
+            }
+            minFerryCapacityLabel.setText("Min Ferry Capacity: " + newValue.intValue());
+            minFerryCapacity = newValue.intValue();
+        });
+
+        maxFerryCapacitySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() < minFerryCapacitySlider.getValue()) {
+                maxFerryCapacitySlider.setValue(minFerryCapacitySlider.getValue());
+            }
+            maxFerryCapacityLabel.setText("Max Ferry Capacity: " + newValue.intValue());
+            maxFerryCapacity = newValue.intValue();
+        });
+
+        minFerryCapacitySlider.setValue(settings.getMinRandomFerryCapacity());
+        maxFerryCapacitySlider.setValue(settings.getMaxRandomFerryCapacity());
+
+
     }
 
 
