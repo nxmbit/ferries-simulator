@@ -14,12 +14,63 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.EnumSet;
+import javafx.scene.Node;
+
 public class Controller implements Initializable {
     private Simulation simulation;
     private Timeline timeline;
-    private final SettingsImport settings = new SettingsImport();
-    private final MapImport mapImport = new MapImport();
-    private boolean simulationRunning = false;
+    private final SettingsImport settings;
+    private final MapImport mapImport;
+    private boolean simulationRunning;
+
+    private final Set<Node> currentNodes;
+    private final Set<Node> staticNodes;
+
+    private Tile[][] grid;
+    private TileType[][] OriginalTileTypes;
+
+    private int gridWidth;
+    private int gridHeight;
+    private int dockHeight;
+    private double tileSize;
+
+    private int dock1EnteringCapacity;
+    private int dock1ExitingCapacity;
+    private int dock2EnteringCapacity;
+    private int dock2ExitingCapacity;
+
+    private int minFerryCapacity;
+    private int maxFerryCapacity;
+    private int minFerryLoadingTime;
+    private int maxFerryLoadingTime;
+    private int leftFerries;
+    private int rightFerries;
+    private double ferrySpeed;
+
+    // Set of tile types that are static and should not be redrawn
+    private static final EnumSet<TileType> StaticTileTypeSet = EnumSet.of(
+            TileType.WATER,
+            TileType.BEACH,
+            TileType.GRASS,
+            TileType.ROAD_DIVIDER,
+            TileType.ROAD_EDGE_LEFT,
+            TileType.ROAD_EDGE_RIGHT,
+            TileType.DOCK_DIVIDER_CROSS_LEFT,
+            TileType.DOCK_DIVIDER_CROSS_RIGHT,
+            TileType.DOCK_DIVIDER_HORIZONTAL,
+            TileType.DOCK_DIVIDER_VERTICAL,
+            TileType.DOCK_EDGE_BOTTOM,
+            TileType.DOCK_EDGE_BOTTOM_CONN_LEFT,
+            TileType.DOCK_EDGE_BOTTOM_CONN_RIGHT,
+            TileType.DOCK_EDGE_CROSS_LEFT,
+            TileType.DOCK_EDGE_CROSS_RIGHT,
+            TileType.DOCK_EDGE_LEFT,
+            TileType.DOCK_EDGE_RIGHT,
+            TileType.DOCK_EDGE_TOP
+    );
 
     @FXML
     private Pane pane;
@@ -94,28 +145,26 @@ public class Controller implements Initializable {
     @FXML
     private Label maxFerryCapacityLabel;
 
+    public Controller() {
+        this.settings = new SettingsImport();
+        this.mapImport = new MapImport();
+        this.simulationRunning = false;
+        this.currentNodes = new HashSet<>();
+        this.staticNodes = new HashSet<>();
 
-    private Tile[][] grid;
-    private TileType[][] OriginalTileTypes;
+        this.dock1EnteringCapacity = mapImport.getDock1EnteringCapacity();
+        this.dock1ExitingCapacity = mapImport.getDock1ExitingCapacity();
+        this.dock2EnteringCapacity = mapImport.getDock2EnteringCapacity();
+        this.dock2ExitingCapacity = mapImport.getDock2ExitingCapacity();
 
-    private int gridWidth;
-    private int gridHeight;
-    private int dockHeight;
-    private double tileSize;
-
-    private int dock1EnteringCapacity = mapImport.getDock1EnteringCapacity();
-    private int dock1ExitingCapacity = mapImport.getDock1ExitingCapacity();
-    private int dock2EnteringCapacity = mapImport.getDock2EnteringCapacity();
-    private int dock2ExitingCapacity = mapImport.getDock2ExitingCapacity();
-
-    private int minFerryCapacity = settings.getMinRandomFerryCapacity();
-    private int maxFerryCapacity = settings.getMaxRandomFerryCapacity();
-    private int minFerryLoadingTime = settings.getMinRandomFerryLoadingTime();
-    private int maxFerryLoadingTime = settings.getMaxRandomFerryLoadingTime();
-    private int leftFerries = mapImport.getDock1FerryQueueSize();
-    private int rightFerries = mapImport.getDock2FerryQueueSize();
-    private double ferrySpeed = settings.getFerrySpeed();
-
+        this.minFerryCapacity = settings.getMinRandomFerryCapacity();
+        this.maxFerryCapacity = settings.getMaxRandomFerryCapacity();
+        this.minFerryLoadingTime = settings.getMinRandomFerryLoadingTime();
+        this.maxFerryLoadingTime = settings.getMaxRandomFerryLoadingTime();
+        this.leftFerries = mapImport.getDock1FerryQueueSize();
+        this.rightFerries = mapImport.getDock2FerryQueueSize();
+        this.ferrySpeed = settings.getFerrySpeed();
+    }
 
 
     @Override
@@ -135,6 +184,7 @@ public class Controller implements Initializable {
     private void setupIfReady() {
         if (pane.getWidth() > 0 && pane.getHeight() > 0) {
             createGrid();
+            drawStaticNodes();
             draw();
             setupSimulation();
             updateUIState();
@@ -289,6 +339,7 @@ public class Controller implements Initializable {
     private void clearSimulation() {
         pane.getChildren().clear();
         createGrid();
+        drawStaticNodes();
         draw();
     }
 
@@ -330,19 +381,51 @@ public class Controller implements Initializable {
         draw();
     }
 
-    private void draw() {
-        pane.getChildren().clear();
+    private void drawStaticNodes() {
         for (int i = 0; i < gridWidth; i++) {
             for (int j = 0; j < gridHeight; j++) {
                 Tile tile = grid[i][j];
-                pane.getChildren().add(tile);
+                if (StaticTileTypeSet.contains(tile.getType())) {
+                    staticNodes.add(tile);
+                    pane.getChildren().add(tile);
+                }
+            }
+        }
+    }
+
+    private void draw() {
+        Set<Node> newNodes = new HashSet<>();
+
+        for (int i = 0; i < gridWidth; i++) {
+            for (int j = 0; j < gridHeight; j++) {
+                Tile tile = grid[i][j];
+                if (!StaticTileTypeSet.contains(tile.getType())) {
+                    newNodes.add(tile);
+                }
             }
         }
 
         if (simulation != null) {
-                for (Ferry ferry : simulation.getFerries()) {
-                    pane.getChildren().add(ferry);
-                }
+            for (Ferry ferry : simulation.getFerries()) {
+                newNodes.add(ferry);
+            }
+        }
+
+        // Remove nodes that are no longer needed
+        currentNodes.removeIf(node -> {
+            if (!newNodes.contains(node)) {
+                pane.getChildren().remove(node);
+                return true;
+            }
+            return false;
+        });
+
+        // Add new nodes
+        for (Node node : newNodes) {
+            if (!currentNodes.contains(node)) {
+                pane.getChildren().add(node);
+                currentNodes.add(node);
+            }
         }
     }
 
@@ -409,7 +492,6 @@ public class Controller implements Initializable {
     }
 
     private void setupQueueSpinners() {
-        // Initialize the MapImport object
         MapImport mapImport = new MapImport();
 
         // Left dock entry queue spinner
@@ -549,7 +631,6 @@ public class Controller implements Initializable {
 
     }
 
-
     @FXML
     private void spawnLeftVehicle() {
         if (simulationRunning) {
@@ -582,7 +663,7 @@ public class Controller implements Initializable {
     private void showAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About");
-        alert.setHeaderText("Symulator promów na rzece\nPaweł Hołownia WCY22IY3S1");
+        alert.setHeaderText("Ferries Simulator\nPaweł Hołownia (nxmbit)");
         alert.setContentText("Realizowane zadanie:\nPromy na rzece.\n" +
                 "Założenia:\n" +
                 "Przeprawę obsługuje N promów o określonej pojemności każdy.\n" +
