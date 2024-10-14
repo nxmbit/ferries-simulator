@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class VehicleSpawner {
     private Tile[][] grid;
@@ -18,7 +17,7 @@ public class VehicleSpawner {
     private Map<Integer, Tile> spawnPoints;
     private Map<Integer, Tile> despawnPoints;
     private Map<Integer, Dock> docks;
-    private final Random random = new Random();
+    private final Random random;
     private double minSpeed;
     private double maxSpeed;
     private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.PURPLE};
@@ -29,6 +28,7 @@ public class VehicleSpawner {
                           Map<Integer, Tile> despawnPoints, TileType[][] originalTileTypes,
                           long spawnInterval, List<Vehicle> vehicles, double leftDockSpawnProbability,
                           double minSpeed, double maxSpeed) {
+        this.random = new Random();
         this.docks = docks;
         this.grid = grid;
         this.originalTileTypes = originalTileTypes;
@@ -121,7 +121,7 @@ public class VehicleSpawner {
             spawnPoint.setType(TileType.VEHICLE);
             spawnPoint.setFill(color);
 
-            // Logowanie spawnowania pojazdu
+            // Log the spawn
             System.out.println("Vehicle spawned at (" + spawnPoint.getGridX() + ", " + spawnPoint.getGridY() + ") with speed " + speed + " and color " + color);
 
             new Thread(vehicle).start();

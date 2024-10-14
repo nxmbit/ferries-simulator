@@ -153,6 +153,13 @@ public class Ferry extends Pane implements Runnable {
             } finally {
                 currentDock.getCriticalSectionLock().unlock();
             }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
         }
 
         if (vehiclesOnBoard.isEmpty()) {
@@ -304,7 +311,6 @@ public class Ferry extends Pane implements Runnable {
         Platform.runLater(() -> setLayoutY(y));
     }
 
-
     public boolean setQueuePosition(int positionInQueue) {
         if (movementState == MovementState.LEAVING_QUEUE) {
             return false;
@@ -379,7 +385,6 @@ public class Ferry extends Pane implements Runnable {
         }
     }
 
-
     private void leaveQueue() {
         double targetX;
         double targetY;
@@ -411,13 +416,9 @@ public class Ferry extends Pane implements Runnable {
                 movementState = MovementState.AT_DOCK;
                 state = FerryState.UNLOADING;
                 currentDock.setFerryAtDock(true);
-//                Dock temp = currentDock;
-//                currentDock = targetDock;
-//                targetDock = temp;
             }
         }
     }
-
 
     private void enterQueue() {
         System.out.println("Ferry " + this + " is entering the queue.");

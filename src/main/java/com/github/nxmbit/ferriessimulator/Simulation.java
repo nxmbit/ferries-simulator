@@ -11,7 +11,6 @@ public class Simulation implements Runnable {
     private static final List<Vehicle> vehicles = Collections.synchronizedList(new ArrayList<>());
     private final List<Ferry> ferries;
     private VehicleSpawner vehicleSpawner;
-    private int maxCarsCount;
 
     private MapImport mapImport;
     private final SettingsImport settings;
@@ -31,7 +30,6 @@ public class Simulation implements Runnable {
         this.spawnPoints = new HashMap<>();
         this.despawnPoints = new HashMap<>();
         this.docks = new HashMap<>();
-        this.maxCarsCount = 5;
         this.mapImport = new MapImport();
         this.settings = new SettingsImport();
         this.simulationRunning = true;

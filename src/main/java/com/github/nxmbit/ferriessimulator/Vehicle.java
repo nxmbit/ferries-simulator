@@ -151,7 +151,6 @@ public class Vehicle implements Runnable {
                     moveStraight(1);
                     break;
                 default:
-                    // tu jakis try catch ?
                     break;
             }
 
@@ -235,7 +234,6 @@ public class Vehicle implements Runnable {
     }
 
     private boolean enterEnteringQueue() {
-        // Próbuj wejść do kolejki na dock
         if (dock.canEnterEnteringQ()) {
             dock.enterEnteringQ(this);
             travelState = VehicleState.AWAITING_ON_DOCK;

@@ -8,8 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Tile extends Rectangle {
     private TileType type;
-    private final Lock lock = new ReentrantLock();
-    private final Condition condition = lock.newCondition();
+    private final Lock lock;
     private int gridX;
     private int gridY;
     private boolean strokeVisibility;
@@ -19,6 +18,7 @@ public class Tile extends Rectangle {
         this.gridX = gridX;
         this.gridY = gridY;
         this.type = type;
+        this.lock = new ReentrantLock();
         setFillBasedOnType();
     }
 
@@ -29,10 +29,6 @@ public class Tile extends Rectangle {
     public void setStrokeVisibility(boolean visibility) {
         strokeVisibility = visibility;
         setFillBasedOnType();
-    }
-
-    public Condition getCondition() {
-        return condition;
     }
 
     public int getGridX() {

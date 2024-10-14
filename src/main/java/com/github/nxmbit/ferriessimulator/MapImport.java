@@ -107,6 +107,7 @@ public class MapImport {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to load map properties from file. ", e);
         }
     }
 
