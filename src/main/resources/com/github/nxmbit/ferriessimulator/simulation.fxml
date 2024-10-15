@@ -17,16 +17,8 @@
                 </Menu>
                 <Menu text="Theme">
                     <items>
-                        <RadioMenuItem text="Light Theme" onAction="#setLightTheme">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="themeToggleGroup" />
-                            </toggleGroup>
-                        </RadioMenuItem>
-                        <RadioMenuItem text="Dark Theme" onAction="#setDarkTheme">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="themeToggleGroup" />
-                            </toggleGroup>
-                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="lightThemeMenuItem" text="Light Theme" onAction="#setLightTheme"/>
+                        <RadioMenuItem fx:id="darkThemeMenuItem" text="Dark Theme" onAction="#setDarkTheme"/>
                     </items>
                 </Menu>
             </menus>

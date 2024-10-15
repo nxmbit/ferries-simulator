@@ -145,6 +145,13 @@ public class Controller implements Initializable {
     @FXML
     private Label maxFerryCapacityLabel;
 
+    @FXML
+    private ToggleGroup themeToggleGroup;
+    @FXML
+    private RadioMenuItem lightThemeMenuItem;
+    @FXML
+    private RadioMenuItem darkThemeMenuItem;
+
     public Controller() {
         this.settings = new SettingsImport();
         this.mapImport = new MapImport();
@@ -179,6 +186,13 @@ public class Controller implements Initializable {
         setupQueueSpinners();
         setupFerrySettings();
         setupControlsFromSettings();
+
+        themeToggleGroup = new ToggleGroup();
+        lightThemeMenuItem.setToggleGroup(themeToggleGroup);
+        darkThemeMenuItem.setToggleGroup(themeToggleGroup);
+
+        // Set light theme as default
+        lightThemeMenuItem.setSelected(true);
     }
 
     private void setupIfReady() {
@@ -649,13 +663,11 @@ public class Controller implements Initializable {
     private void setLightTheme() {
         Stage stage = (Stage) pane.getScene().getWindow();
         stage.getScene().getStylesheets().remove(getClass().getResource("dark-theme.css").toExternalForm());
-        stage.getScene().getStylesheets().add(getClass().getResource("light-theme.css").toExternalForm());
     }
 
     @FXML
     private void setDarkTheme() {
         Stage stage = (Stage) pane.getScene().getWindow();
-        stage.getScene().getStylesheets().remove(getClass().getResource("light-theme.css").toExternalForm());
         stage.getScene().getStylesheets().add(getClass().getResource("dark-theme.css").toExternalForm());
     }
 
