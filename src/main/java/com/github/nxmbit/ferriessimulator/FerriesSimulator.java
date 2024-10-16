@@ -14,6 +14,9 @@ public class FerriesSimulator extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("simulation.fxml"));
         Parent root = loader.load();
 
+        Image icon = new Image(getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/icons/icon_rounded256.png"));
+        primaryStage.getIcons().add(icon);
+
         primaryStage.setTitle("Ferries Simulation");
         primaryStage.setScene(new Scene(root));
 
