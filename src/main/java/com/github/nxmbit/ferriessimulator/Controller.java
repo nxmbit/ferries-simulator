@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.fxml.Initializable;
 import javafx.util.StringConverter;
+import javafx.application.HostServices;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,6 +50,13 @@ public class Controller implements Initializable {
     private int leftFerries;
     private int rightFerries;
     private double ferrySpeed;
+
+    /*
+     HostServices object to open links in the default browser
+     we need to pass this object to the controller from the main
+     application class
+    */
+    private HostServices hostServices;
 
     // Set of tile types that are static and should not be redrawn
     private static final EnumSet<TileType> StaticTileTypeSet = EnumSet.of(
@@ -193,6 +201,11 @@ public class Controller implements Initializable {
 
         // Set light theme as default
         lightThemeMenuItem.setSelected(true);
+    }
+
+    // Setter for the HostServices object
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
     }
 
     private void setupIfReady() {
@@ -674,25 +687,23 @@ public class Controller implements Initializable {
     @FXML
     private void showAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        final Hyperlink link = new Hyperlink("https://github.com/nxmbit/ferries-simulator");
+        VBox alertContent = new VBox();
+
         alert.setTitle("About");
         alert.setHeaderText("Ferries Simulator\nPaweł Hołownia (nxmbit)");
-        alert.setContentText("Realizowane zadanie:\nPromy na rzece.\n" +
-                "Założenia:\n" +
-                "Przeprawę obsługuje N promów o określonej pojemności każdy.\n" +
-                "Na przystań i z przystani prowadzi jedna droga, po której poruszają się pojazdy z różną\n" +
-                "prędkością.\n" +
-                "Przystań ma ograniczoną pojemność.\n" +
-                "Na promy jest tylko jeden wspólny wjazd i zjazd, przez który samochody wjeżdżają/zjeżdżają\n" +
-                "pojedynczo (pierwszeństwo samochodów zjeżdżających).\n" +
-                "Promy czekają na zapełnienie przez określony maksymalny czas, po którym:\n" +
-                "- rozpoczynają przeprawę, gdy na pokładzie znajduje się co najmniej jeden pojazd,\n" +
-                "- lub rozpoczynają kolejny okres oczekiwania.\n" +
-                "Jeżeli zapełnią się wcześniej, to rozpoczynają przeprawę przed upływem tego czasu.\n" +
-                "W przypadku przybycia promu do przystani, gdy jest zajęta przez inny prom, to oczekuje w\n" +
-                "kolejce.");
+        
+        link.setOnAction((event) -> {
+            hostServices.showDocument(link.getText());
+        });
 
+        alertContent.getChildren().add(new Label("This project simulates the operation of\n"
+                + "multiple ferries transporting vehicles across a river."
+                + "\n\n More info and source code available at:"));
+        alertContent.getChildren().add(link);
+
+        alert.getDialogPane().setContent(alertContent);
         alert.showAndWait();
     }
 
 }
-

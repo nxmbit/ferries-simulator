@@ -14,6 +14,10 @@ public class FerriesSimulator extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("simulation.fxml"));
         Parent root = loader.load();
 
+        Controller controller = loader.getController();
+        // Pass the HostServices to the controller
+        controller.setHostServices(getHostServices());
+
         Image icon = new Image(getClass().getResourceAsStream("/com/github/nxmbit/ferriessimulator/icons/icon_rounded256.png"));
         primaryStage.getIcons().add(icon);
 
@@ -23,9 +27,7 @@ public class FerriesSimulator extends Application {
         primaryStage.setResizable(false); // Make the window non-resizable
 
         primaryStage.setOnCloseRequest(e -> {
-            Controller controller = loader.getController();
             controller.stopSimulation();
-
             System.exit(0);
         });
 
